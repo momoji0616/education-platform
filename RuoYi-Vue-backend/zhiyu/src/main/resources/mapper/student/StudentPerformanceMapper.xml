@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.student.mapper.StudentPerformanceMapper">
+    
+    <!-- 基础映射 - 只映射数据库表中实际存在的字段 -->
+    <resultMap type="StudentPerformance" id="StudentPerformanceResult">
+        <id property="id" column="id" />
+        <result property="hoursStudied" column="hours_studied" />
+        <result property="attendance" column="attendance" />
+        <result property="parentalInvolvement" column="parental_involvement" />
+        <result property="accessToResources" column="access_to_resources" />
+        <result property="extracurricularActivities" column="extracurricular_activities" />
+        <result property="sleepHours" column="sleep_hours" />
+        <result property="previousScores" column="previous_scores" />
+        <result property="motivationLevel" column="motivation_level" />
+        <result property="internetAccess" column="internet_access" />
+        <result property="tutoringSessions" column="tutoring_sessions" />
+        <result property="familyIncome" column="family_income" />
+        <result property="teacherQuality" column="teacher_quality" />
+        <result property="schoolType" column="school_type" />
+        <result property="peerInfluence" column="peer_influence" />
+        <result property="physicalActivity" column="physical_activity" />
+        <result property="learningDisabilities" column="learning_disabilities" />
+        <result property="parentalEducationLevel" column="parental_education_level" />
+        <result property="distanceFromHome" column="distance_from_home" />
+        <result property="gender" column="gender" />
+        <result property="examScore" column="exam_score" />
+    </resultMap>
+
+    <!-- 查询条件对象 - 只查询数据库表中实际存在的字段 -->
+    <sql id="selectStudentPerformanceVo">
+        select id, hours_studied, attendance, parental_involvement, access_to_resources, 
+               extracurricular_activities, sleep_hours, previous_scores, motivation_level, 
+               internet_access, tutoring_sessions, family_income, teacher_quality, school_type, 
+               peer_influence, physical_activity, learning_disabilities, parental_education_level, 
+               distance_from_home, gender, exam_score 
+        from student_performance
+    </sql>
+
+    <!-- 查询条件构建 - 使用实体类中实际存在的属性 -->
+    <sql id="selectStudentPerformanceWhere">
+        <where>
+            <if test="gender != null and gender != ''">
+                AND gender = #{gender}
+            </if>
+            <if test="schoolType != null and schoolType != ''">
+                AND school_type = #{schoolType}
+            </if>
+            <if test="examScore != null">
+                AND exam_score = #{examScore}
+            </if>
+            <if test="attendance != null">
+                AND attendance = #{attendance}
+            </if>
+            <if test="hoursStudied != null">
+                AND hours_studied = #{hoursStudied}
+            </if>
+        </where>
+    </sql>
+
+    <!-- 查询学生成绩列表 -->
+    <select id="selectStudentPerformanceList" parameterType="StudentPerformance" resultMap="StudentPerformanceResult">
+        <include refid="selectStudentPerformanceVo" />
+        <include refid="selectStudentPerformanceWhere" />
+        order by id desc
+    </select>
+
+    <!-- 分页查询学生成绩列表 -->
+    <select id="selectStudentPerformanceListByPage" resultMap="StudentPerformanceResult">
+        <include refid="selectStudentPerformanceVo" />
+        <where>
+            <if test="studentPerformance.gender != null and studentPerformance.gender != ''">
+                AND gender = #{studentPerformance.gender}
+            </if>
+            <if test="studentPerformance.schoolType != null and studentPerformance.schoolType != ''">
+                AND school_type = #{studentPerformance.schoolType}
+            </if>
+            <if test="studentPerformance.examScore != null">
+                AND exam_score = #{studentPerformance.examScore}
+            </if>
+            <if test="studentPerformance.attendance != null">
+                AND attendance = #{studentPerformance.attendance}
+            </if>
+            <if test="studentPerformance.hoursStudied != null">
+                AND hours_studied = #{studentPerformance.hoursStudied}
+            </if>
+        </where>
+        order by id desc
+        LIMIT #{offset}, #{limit}
+    </select>
+
+    <!-- 通过ID查询学生成绩 -->
+    <select id="selectStudentPerformanceById" parameterType="Long" resultMap="StudentPerformanceResult">
+        <include refid="selectStudentPerformanceVo" />
+        where id = #{id}
+    </select>
+
+    <!-- 新增学生成绩 -->
+    <insert id="insertStudentPerformance" parameterType="StudentPerformance">
+        insert into student_performance
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="hoursStudied != null">hours_studied,</if>
+            <if test="attendance != null">attendance,</if>
+            <if test="parentalInvolvement != null">parental_involvement,</if>
+            <if test="accessToResources != null">access_to_resources,</if>
+            <if test="extracurricularActivities != null">extracurricular_activities,</if>
+            <if test="sleepHours != null">sleep_hours,</if>
+            <if test="previousScores != null">previous_scores,</if>
+            <if test="motivationLevel != null">motivation_level,</if>
+            <if test="internetAccess != null">internet_access,</if>
+            <if test="tutoringSessions != null">tutoring_sessions,</if>
+            <if test="familyIncome != null">family_income,</if>
+            <if test="teacherQuality != null">teacher_quality,</if>
+            <if test="schoolType != null and schoolType != ''">school_type,</if>
+            <if test="peerInfluence != null">peer_influence,</if>
+            <if test="physicalActivity != null">physical_activity,</if>
+            <if test="learningDisabilities != null">learning_disabilities,</if>
+            <if test="parentalEducationLevel != null">parental_education_level,</if>
+            <if test="distanceFromHome != null">distance_from_home,</if>
+            <if test="gender != null and gender != ''">gender,</if>
+            <if test="examScore != null">exam_score,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="hoursStudied != null">#{hoursStudied},</if>
+            <if test="attendance != null">#{attendance},</if>
+            <if test="parentalInvolvement != null">#{parentalInvolvement},</if>
+            <if test="accessToResources != null">#{accessToResources},</if>
+            <if test="extracurricularActivities != null">#{extracurricularActivities},</if>
+            <if test="sleepHours != null">#{sleepHours},</if>
+            <if test="previousScores != null">#{previousScores},</if>
+            <if test="motivationLevel != null">#{motivationLevel},</if>
+            <if test="internetAccess != null">#{internetAccess},</if>
+            <if test="tutoringSessions != null">#{tutoringSessions},</if>
+            <if test="familyIncome != null">#{familyIncome},</if>
+            <if test="teacherQuality != null">#{teacherQuality},</if>
+            <if test="schoolType != null and schoolType != ''">#{schoolType},</if>
+            <if test="peerInfluence != null">#{peerInfluence},</if>
+            <if test="physicalActivity != null">#{physicalActivity},</if>
+            <if test="learningDisabilities != null">#{learningDisabilities},</if>
+            <if test="parentalEducationLevel != null">#{parentalEducationLevel},</if>
+            <if test="distanceFromHome != null">#{distanceFromHome},</if>
+            <if test="gender != null and gender != ''">#{gender},</if>
+            <if test="examScore != null">#{examScore},</if>
+        </trim>
+    </insert>
+
+    <!-- 修改学生成绩 -->
+    <update id="updateStudentPerformance" parameterType="StudentPerformance">
+        update student_performance
+        <set>
+            <if test="hoursStudied != null">hours_studied = #{hoursStudied},</if>
+            <if test="attendance != null">attendance = #{attendance},</if>
+            <if test="parentalInvolvement != null">parental_involvement = #{parentalInvolvement},</if>
+            <if test="accessToResources != null">access_to_resources = #{accessToResources},</if>
+            <if test="extracurricularActivities != null">extracurricular_activities = #{extracurricularActivities},</if>
+            <if test="sleepHours != null">sleep_hours = #{sleepHours},</if>
+            <if test="previousScores != null">previous_scores = #{previousScores},</if>
+            <if test="motivationLevel != null">motivation_level = #{motivationLevel},</if>
+            <if test="internetAccess != null">internet_access = #{internetAccess},</if>
+            <if test="tutoringSessions != null">tutoring_sessions = #{tutoringSessions},</if>
+            <if test="familyIncome != null">family_income = #{familyIncome},</if>
+            <if test="teacherQuality != null">teacher_quality = #{teacherQuality},</if>
+            <if test="schoolType != null and schoolType != ''">school_type = #{schoolType},</if>
+            <if test="peerInfluence != null">peer_influence = #{peerInfluence},</if>
+            <if test="physicalActivity != null">physical_activity = #{physicalActivity},</if>
+            <if test="learningDisabilities != null">learning_disabilities = #{learningDisabilities},</if>
+            <if test="parentalEducationLevel != null">parental_education_level = #{parentalEducationLevel},</if>
+            <if test="distanceFromHome != null">distance_from_home = #{distanceFromHome},</if>
+            <if test="gender != null and gender != ''">gender = #{gender},</if>
+            <if test="examScore != null">exam_score = #{examScore},</if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!-- 删除学生成绩 -->
+    <delete id="deleteStudentPerformanceById" parameterType="Long">
+        delete from student_performance where id = #{id}
+    </delete>
+
+    <!-- 批量删除学生成绩 -->
+    <delete id="deleteStudentPerformanceByIds" parameterType="Long[]">
+        delete from student_performance where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <settings>
+        <!-- 开启驼峰命名转换：Table{create_time} -> Entity{createTime} -->
+        <setting name="mapUnderscoreToCamelCase" value="true" />
+        <!-- 开启延迟加载 -->
+        <setting name="lazyLoadingEnabled" value="true" />
+        <!-- 按需加载字段(加载字段由SQL指定)，不会加载关联表的所有字段，以提高性能 -->
+        <setting name="aggressiveLazyLoading" value="false" />
+        <!-- 开启二级缓存 -->
+        <setting name="cacheEnabled" value="true" />
+        <!-- 打印SQL日志 -->
+        <setting name="logImpl" value="STDOUT_LOGGING" />
+    </settings>
+    
+    <!-- 全局参数设置 -->
+    <typeHandlers>
+        <!-- 自定义类型处理器 -->
+    </typeHandlers>
+    
+    <!-- 别名设置 -->
+    <typeAliases>
+        <!-- 可以在这里添加自定义类型别名 -->
+    </typeAliases>
+</configuration>
