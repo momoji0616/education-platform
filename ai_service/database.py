@@ -5,7 +5,7 @@ from sqlalchemy.orm import sessionmaker
 
 # MySQL 连接配置（替换为你的实际信息）
 # 格式：mysql+pymysql://用户名:密码@主机地址:端口号/数据库名
-SQLALCHEMY_DATABASE_URL = "mysql+pymysql://root:123456@localhost:3306/ry-vue"
+SQLALCHEMY_DATABASE_URL = "mysql+pymysql://root:@localhost:3306/ry-vue"
 # 说明：
 # - root：MySQL 用户名（通常默认是 root）
 # - 123456：你的 MySQL 密码（请替换为实际密码）

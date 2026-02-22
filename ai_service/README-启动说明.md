@@ -5,22 +5,22 @@
 ### 问题 1：找不到 main 模块
 **错误信息：** `ERROR: Error loading ASGI app. Could not import module "main".`
 
-**原因：** 在项目根目录运行 uvicorn，但 `main.py` 在 `rag` 目录下。
+**原因：** 在项目根目录运行 uvicorn，但 `main.py` 在 `ai_service` 目录下。
 
 **解决方法：**
 ```powershell
-# 方法 1：切换到 rag 目录运行（推荐）
-cd E:\tensorflow_education\tensorflow_education\rag
+# 方法 1：切换到 ai_service 目录运行（推荐）
+cd E:\tensorflow_education\tensorflow_education\ai_service
 uvicorn main:app --reload --port 8000
 
 # 方法 2：从根目录运行，指定模块路径
 cd E:\tensorflow_education\tensorflow_education
-uvicorn rag.main:app --reload --port 8000
+uvicorn ai_service.main:app --reload --port 8000
 
 # 方法 3：使用启动脚本
-.\rag\start_rag.bat
+.\ai_service\start_rag.bat
 # 或
-.\rag\start_rag.ps1
+.\ai_service\start_rag.ps1
 ```
 
 ### 问题 2：sqlite3 版本过低
@@ -53,7 +53,7 @@ sys.modules['sqlite3'] = pysqlite3
 
 ### 1. 安装依赖
 ```powershell
-cd E:\tensorflow_education\tensorflow_education\rag
+cd E:\tensorflow_education\tensorflow_education\ai_service
 pip install fastapi uvicorn chromadb sentence-transformers pandas scikit-learn tensorflow
 ```
 
@@ -66,13 +66,13 @@ pip install pysqlite3-binary
 
 **使用启动脚本（推荐）：**
 ```powershell
-cd E:\tensorflow_education\tensorflow_education\rag
+cd E:\tensorflow_education\tensorflow_education\ai_service
 .\start_rag.bat
 ```
 
 **手动启动：**
 ```powershell
-cd E:\tensorflow_education\tensorflow_education\rag
+cd E:\tensorflow_education\tensorflow_education\ai_service
 uvicorn main:app --reload --port 8000 --host 0.0.0.0
 ```
 
@@ -84,13 +84,13 @@ uvicorn main:app --reload --port 8000 --host 0.0.0.0
 
 ## 常见问题
 
-### Q: 为什么要在 rag 目录下运行？
-A: 因为 `main.py` 中使用了相对导入（`from rag_service import RAGService`），需要在 `rag` 目录下运行才能正确导入模块。
+### Q: 为什么要在 ai_service 目录下运行？
+A: 因为 `main.py` 中使用了相对导入（`from rag_service import RAGService`），需要在 `ai_service` 目录下运行才能正确导入模块。
 
 ### Q: 可以修改代码在根目录运行吗？
 A: 可以，但需要修改导入方式为绝对导入，例如：
 ```python
-from rag.rag_service import RAGService
-from rag.prediction_service import PredictionService
+from ai_service.rag_service import RAGService
+from ai_service.prediction_service import PredictionService
 ```
-然后从根目录运行：`uvicorn rag.main:app --reload --port 8000`
+然后从根目录运行：`uvicorn ai_service.main:app --reload --port 8000`

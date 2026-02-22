@@ -83,7 +83,7 @@ redis-cli ping
 
 ### 1. 安装项目依赖
 ```powershell
-cd E:\tensorflow_education\tensorflow_education\RuoYi-Vue-backend
+cd E:\tensorflow_education\tensorflow_education\backend
 mvn clean install -DskipTests
 ```
 
