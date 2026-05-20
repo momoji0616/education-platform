@@ -1,8 +1,14 @@
 /**
- * 教育 Pad 端路由（全屏独立，不使用若依 Layout）
+ * 教育模块路由入口
+ * 主控端、教师 Pad、学生 Pad 按文件拆分，统一在这里聚合导出。
  */
 
-const educationAccessRoles = ['admin', 'manager', 'teacher', 'student', 'ROLE_DEFAULT']
+import adminEducationRoutes, { managerRoles } from './admin'
+import teacherEducationRoutes, { teacherRoles } from './teacher'
+import studentEducationRoutes, { studentRoles } from './student'
+
+const teacherStudentRoles = [...teacherRoles, ...studentRoles]
+const educationAccessRoles = [...managerRoles, ...teacherRoles, ...studentRoles]
 
 const educationRoutes = [
   {
@@ -12,14 +18,18 @@ const educationRoutes = [
   },
   {
     path: '/education/pad',
-    component: () => import('@/views/education/pad'),
-    name: 'EducationPad',
+    component: () => import('@/views/education/entry'),
+    name: 'EducationPadEntry',
     roles: educationAccessRoles,
     meta: {
-      title: 'Pad教育端',
+      title: '教育端入口',
       noCache: true
-    }
+    },
+    hidden: true
   },
+  ...adminEducationRoutes,
+  ...teacherEducationRoutes,
+  ...studentEducationRoutes,
   {
     path: '/education/dashboard',
     redirect: '/education/auth?redirect=/education/pad',
@@ -34,7 +44,7 @@ const educationRoutes = [
     path: '/education/rag',
     component: () => import('@/views/education/rag'),
     name: 'EducationRag',
-    roles: educationAccessRoles,
+    roles: teacherStudentRoles,
     meta: {
       title: 'AI 智能问答',
       noCache: true
@@ -45,7 +55,7 @@ const educationRoutes = [
     path: '/education/prediction',
     component: () => import('@/views/education/prediction'),
     name: 'EducationPrediction',
-    roles: educationAccessRoles,
+    roles: teacherStudentRoles,
     meta: {
       title: 'AI 成绩预测',
       noCache: true

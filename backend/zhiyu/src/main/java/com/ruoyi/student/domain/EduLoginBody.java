@@ -7,6 +7,7 @@ public class EduLoginBody
 {
     private String username;
     private String password;
+    private String majorKey;
     private Integer gradeNo;
     private Integer classNo;
 
@@ -28,6 +29,16 @@ public class EduLoginBody
     public void setPassword(String password)
     {
         this.password = password;
+    }
+
+    public String getMajorKey()
+    {
+        return majorKey;
+    }
+
+    public void setMajorKey(String majorKey)
+    {
+        this.majorKey = majorKey;
     }
 
     public Integer getGradeNo()

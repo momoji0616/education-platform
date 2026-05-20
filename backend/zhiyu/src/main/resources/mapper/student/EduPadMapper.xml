@@ -99,6 +99,7 @@
                s.student_name,
                s.score,
                s.feedback,
+               h.title as homework_title,
                h.teacher_id,
                h.class_name
         from edu_homework_submission s
@@ -304,6 +305,52 @@
         order by create_time asc
     </select>
 
+    <select id="selectClassChatContacts" resultType="java.util.Map">
+        select p.user_id,
+               u.nick_name,
+               p.role_key,
+               p.class_name
+        from edu_user_class_profile p
+                 left join sys_user u on p.user_id = u.user_id
+        where p.class_name = #{className}
+          and p.user_id != #{excludeUserId}
+          and p.role_key = #{roleKey}
+          and (u.del_flag = '0' or u.del_flag is null)
+        order by u.nick_name asc
+    </select>
+
+    <select id="selectChatMessages" resultType="java.util.Map">
+        select post_id as message_id,
+               author_id as sender_id,
+               author_name as sender_name,
+               target_role as receiver_id,
+               content,
+               create_time
+        from edu_forum_post
+        where title = 'CHAT_DM'
+          and class_name = #{className}
+          and (
+            (author_id = #{currentUserId} and target_role = #{peerUserIdStr})
+                or
+            (author_id = #{peerUserId} and target_role = #{currentUserIdStr})
+            )
+        order by create_time asc, post_id asc
+    </select>
+
+    <select id="selectGroupChatMessages" resultType="java.util.Map">
+        select post_id as message_id,
+               author_id as sender_id,
+               author_name as sender_name,
+               target_role as group_id,
+               content,
+               create_time
+        from edu_forum_post
+        where title = 'CHAT_GROUP'
+          and class_name = #{className}
+          and target_role = #{groupId}
+        order by create_time asc, post_id asc
+    </select>
+
     <select id="selectForumLastReadTime" parameterType="Long" resultType="java.util.Date">
         select last_read_time from edu_forum_read_state where user_id = #{userId} limit 1
     </select>
@@ -382,6 +429,46 @@
         where user_id = #{studentUserId}
           and role_key = 'student'
           and class_name = #{className}
+    </select>
+
+    <select id="selectAdminMajorOverview" resultType="java.util.Map">
+        select p.class_name as className,
+               sum(case when p.role_key = 'teacher' then 1 else 0 end) as teacherCount,
+               sum(case when p.role_key = 'student' then 1 else 0 end) as studentCount,
+               case
+                   when p.class_name = _utf8mb4 0xe695b0e68daee7a791e5ada6e4b88ee5a4a7e695b0e68daee68a80e69caf then (
+                       select count(distinct sp2.student_no)
+                       from edu_student_answer_record ar2
+                                inner join education_legacy_piclass.legacy_staging_student_profile sp2
+                                           on ar2.student_no = sp2.student_no
+                       where sp2.class_code in ('1002', '1005', '1008', '1009', '1010', '1011', '1012', '1013', '1014', '1015', '1016')
+                   )
+                   else 0
+               end as answerStudentCount,
+               sum(case when p.role_key = 'teacher' and ifnull(p.head_teacher, 0) = 1 then 1 else 0 end) as headTeacherCount,
+               count(distinct sp.id) as realDataCount
+        from edu_user_class_profile p
+                 left join student_performance sp on sp.class_name = p.class_name
+        where p.class_name is not null
+          and p.class_name != ''
+        group by p.class_name
+        order by studentCount desc, teacherCount desc, p.class_name asc
+    </select>
+
+    <select id="selectAdminMajorUsers" resultType="java.util.Map">
+        select p.user_id as userId,
+               u.user_name as userName,
+               u.nick_name as nickName,
+               u.status as status,
+               p.class_name as className,
+               p.role_key as roleKey,
+               p.head_teacher as headTeacher
+        from edu_user_class_profile p
+                 left join sys_user u on p.user_id = u.user_id
+        where p.class_name = #{className}
+          and p.role_key = #{roleKey}
+          and (u.del_flag = '0' or u.del_flag is null)
+        order by ifnull(p.head_teacher, 0) desc, u.nick_name asc, u.user_name asc
     </select>
 
 </mapper>

@@ -1,0 +1,4 @@
+education:
+  ai:
+    base-url: ${EDUCATION_AI_BASE_URL:https://ai.example.com}
+

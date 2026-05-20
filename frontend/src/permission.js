@@ -26,11 +26,25 @@ const shouldForcePad = (path = '') => {
   return !isPadOnlyPath(path)
 }
 
+const demoTeacherEntry = '/education/auth?role=teacher&redirect=/education/teacher/pad&demo=teacher'
+
+function resolveAuthEntry(path = '') {
+  if (path.startsWith('/education/student')) {
+    return `/education/auth?role=student&redirect=${encodeURIComponent(path)}`
+  }
+  if (path.startsWith('/education/teacher')) {
+    return `/education/auth?role=teacher&redirect=${encodeURIComponent(path)}`
+  }
+  if (path.startsWith('/education/admin')) {
+    return `/education/auth?role=admin&redirect=${encodeURIComponent(path)}`
+  }
+  return demoTeacherEntry
+}
+
 router.beforeEach((to, from, next) => {
   NProgress.start()
   if (getToken()) {
     to.meta.title && useSettingsStore().setTitle(to.meta.title)
-    /* has token*/
     if (to.path === '/login') {
       next({ path: '/' })
       NProgress.done()
@@ -39,15 +53,13 @@ router.beforeEach((to, from, next) => {
     } else {
       if (useUserStore().roles.length === 0) {
         isRelogin.show = true
-        // 判断当前用户是否已拉取完user_info信息
         useUserStore().getInfo().then(() => {
           isRelogin.show = false
           const userRoles = useUserStore().roles || []
           usePermissionStore().generateRoutes(userRoles).then(accessRoutes => {
-            // 根据roles权限生成可访问的路由表
             accessRoutes.forEach(route => {
               if (!isHttp(route.path) && (!route.name || !router.hasRoute(route.name))) {
-                router.addRoute(route) // 动态添加可访问路由表
+                router.addRoute(route)
               }
             })
             const normalizedRoles = normalizeRoles(userRoles)
@@ -55,12 +67,12 @@ router.beforeEach((to, from, next) => {
               next({ path: '/education/pad', replace: true })
               return
             }
-            next({ ...to, replace: true }) // hack方法 确保addRoutes已完成
+            next({ ...to, replace: true })
           })
         }).catch(err => {
           useUserStore().logOut().then(() => {
             ElMessage.error(err)
-            next({ path: '/' })
+            next({ path: demoTeacherEntry })
           })
         })
       } else {
@@ -88,16 +100,10 @@ router.beforeEach((to, from, next) => {
       }
     }
   } else {
-    // 没有token
     if (isWhiteList(to.path)) {
-      // 在免登录白名单，直接进入
       next()
     } else {
-      if (isPadOnlyPath(to.path)) {
-        next(`/education/auth?redirect=${to.fullPath}`)
-      } else {
-        next(`/login?redirect=${to.fullPath}`) // 否则全部重定向到登录页
-      }
+      next(resolveAuthEntry(to.path))
       NProgress.done()
     }
   }

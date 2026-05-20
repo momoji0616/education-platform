@@ -16,6 +16,19 @@
         <!--用户数据-->
         <pane size="84">
           <el-col>
+            <el-alert
+              v-if="activeEduRoleLabel"
+              :title="`当前正在查看${activeEduRoleLabel}账号`"
+              type="info"
+              :closable="false"
+              show-icon
+              style="margin-bottom: 16px"
+            >
+              <template #default>
+                <span>列表已按角色筛选，只展示当前系统内的{{ activeEduRoleLabel }}账号<span v-if="activeClassName">，并限定为 {{ activeClassName }}</span>。</span>
+                <el-button link type="primary" style="margin-left: 12px" @click="clearEduRoleFilter">查看全部</el-button>
+              </template>
+            </el-alert>
             <el-form :model="queryParams" ref="queryRef" :inline="true" v-show="showSearch" label-width="68px">
               <el-form-item label="用户名称" prop="userName">
                 <el-input v-model="queryParams.userName" placeholder="请输入用户名称" clearable style="width: 240px" @keyup.enter="handleQuery" />
@@ -242,10 +255,12 @@
 import { getToken } from "@/utils/auth"
 import useAppStore from '@/store/modules/app'
 import { changeUserStatus, listUser, resetUserPwd, delUser, getUser, updateUser, addUser, deptTreeSelect } from "@/api/system/user"
+import { listRole } from "@/api/system/role"
 import { Splitpanes, Pane } from "splitpanes"
 import "splitpanes/dist/splitpanes.css"
 
 const router = useRouter()
+const route = useRoute()
 const appStore = useAppStore()
 const { proxy } = getCurrentInstance()
 const { sys_normal_disable, sys_user_sex } = proxy.useDict("sys_normal_disable", "sys_user_sex")
@@ -263,12 +278,23 @@ const dateRange = ref([])
 const deptName = ref("")
 const deptOptions = ref(undefined)
 const enabledDeptOptions = ref(undefined)
+const roleFilterMap = ref({})
 const deptMetaMap = ref({})
 const userIdentityMap = ref({})
 const userIdentityCache = ref({})
 const initPassword = ref(undefined)
 const postOptions = ref([])
 const roleOptions = ref([])
+const activeEduRole = computed(() => {
+  const role = String(route.query.eduRole || "").trim().toLowerCase()
+  return ["teacher", "student"].includes(role) ? role : ""
+})
+const activeEduRoleLabel = computed(() => {
+  if (activeEduRole.value === "teacher") return "老师"
+  if (activeEduRole.value === "student") return "学生"
+  return ""
+})
+const activeClassName = computed(() => String(route.query.className || "").trim())
 /*** 用户导入参数 */
 const upload = reactive({
   // 是否显示弹出层（用户导入）
@@ -307,7 +333,9 @@ const data = reactive({
     userName: undefined,
     phonenumber: undefined,
     status: undefined,
-    deptId: undefined
+    roleId: undefined,
+    deptId: undefined,
+    params: {}
   },
   rules: {
     deptId: [{ required: true, message: "归属班级不能为空", trigger: "change" }],
@@ -341,6 +369,34 @@ function getList() {
     total.value = res.total
     loadUserIdentityLabels()
   })
+}
+
+async function ensureRoleFilterMap() {
+  if (Object.keys(roleFilterMap.value).length) {
+    return roleFilterMap.value
+  }
+  const response = await listRole({ pageNum: 1, pageSize: 100 })
+  const nextMap = {}
+  for (const role of response.rows || []) {
+    const roleKey = String(role.roleKey || "").toLowerCase()
+    if (!nextMap.teacher && roleKey.includes("teacher")) nextMap.teacher = role.roleId
+    if (!nextMap.student && roleKey.includes("student")) nextMap.student = role.roleId
+  }
+  roleFilterMap.value = nextMap
+  return nextMap
+}
+
+async function syncEduRoleFilter() {
+  if (!activeEduRole.value) {
+    queryParams.value.roleId = undefined
+  } else {
+    const roleMap = await ensureRoleFilterMap()
+    queryParams.value.roleId = roleMap[activeEduRole.value]
+  }
+  queryParams.value.params = {
+    ...(queryParams.value.params || {}),
+    className: activeClassName.value || undefined
+  }
 }
 
 /** 查询部门下拉树结构 */
@@ -500,7 +556,13 @@ function resetQuery() {
   proxy.resetForm("queryRef")
   queryParams.value.deptId = undefined
   proxy.$refs.deptTreeRef.setCurrentKey(null)
-  handleQuery()
+  syncEduRoleFilter().then(() => {
+    handleQuery()
+  })
+}
+
+function clearEduRoleFilter() {
+  router.push({ path: "/system/user" })
 }
 
 /** 删除按钮操作 */
@@ -706,8 +768,19 @@ function submitForm() {
   })
 }
 
-onMounted(() => {
+watch(() => route.query.eduRole, async () => {
+  await syncEduRoleFilter()
+  getList()
+})
+
+watch(() => route.query.className, async () => {
+  await syncEduRoleFilter()
+  getList()
+})
+
+onMounted(async () => {
   getDeptTree()
+  await syncEduRoleFilter()
   getList()
   proxy.getConfigKey("sys.user.initPassword").then(response => {
     initPassword.value = response.msg

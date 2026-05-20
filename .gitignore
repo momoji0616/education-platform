@@ -1,0 +1,47 @@
+# Ignore local environment files
+.env
+**/.env
+
+# Keep examples in repo
+!.env.example
+!**/.env.example
+
+# Python / AI runtime cache
+__pycache__/
+**/__pycache__/
+*.py[cod]
+*.pyo
+.pytest_cache/
+
+# Local virtual environments and package caches
+.venv/
+venv/
+env/
+node_modules/
+frontend/node_modules/
+
+# Build outputs
+dist/
+frontend/dist/
+target/
+backend/**/target/
+
+# Runtime logs
+logs/
+*.log
+ai_service/uvicorn-*.out.log
+ai_service/uvicorn-*.err.log
+
+# Local vector databases and runtime stores
+ai_service/qdrant_db/
+ai_service/chroma_db/
+
+# Large local database dump
+backend/sql/piclass2.sql
+
+# Editor and temporary files
+*.swp
+*.swo
+~$*
+tmp_*
+contest-deck.pptx

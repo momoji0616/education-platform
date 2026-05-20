@@ -1,0 +1,567 @@
+﻿<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.student.mapper.EduLegacyAnalyticsMapper">
+
+    <select id="selectMappedStudentNoByCurrentUserId" resultType="String">
+        select legacy_student_no
+        from edu_legacy_user_map
+        where current_user_id = #{userId}
+          and map_status = '1'
+        limit 1
+    </select>
+
+    <select id="selectMappedClassCodeByCurrentClassName" resultType="String">
+        select legacy_class_code
+        from edu_legacy_class_map
+        where current_class_name = #{currentClassName}
+          and map_status = '1'
+        limit 1
+    </select>
+
+    <select id="selectQuestionCatalogs" resultType="java.util.Map">
+        select id,
+               catalog_code as catalogCode,
+               catalog_name as catalogName,
+               course_name as courseName,
+               chapter_code as chapterCode,
+               chapter_name as chapterName,
+               question_count as questionCount
+        from edu_question_catalog
+        where status = '0'
+        <if test="courseName != null and courseName != ''">
+            and course_name = #{courseName}
+        </if>
+        order by course_name asc, chapter_code asc, id asc
+    </select>
+
+    <select id="selectQuestionCatalogsFromBank" resultType="java.util.Map">
+        select grouped.id,
+               grouped.catalog_code as catalogCode,
+               grouped.catalog_name as catalogName,
+               grouped.course_name as courseName,
+               grouped.chapter_code as chapterCode,
+               grouped.chapter_name as chapterName,
+               grouped.question_count as questionCount
+        from (
+                 select min(normalized.id) as id,
+                        concat('QB-', normalized.catalog_chapter_code) as catalog_code,
+                        normalized.chapter_name as catalog_name,
+                        normalized.course_name as course_name,
+                        normalized.chapter_code as chapter_code,
+                        normalized.chapter_name as chapter_name,
+                        count(1) as question_count
+                 from (
+                          select qb.id,
+                                 ifnull(nullif(qb.course_name, ''), 'Unnamed Course') as course_name,
+                                 ifnull(nullif(qb.chapter_code, ''), '') as chapter_code,
+                                 ifnull(nullif(qb.chapter_code, ''), 'NO_CODE') as catalog_chapter_code,
+                                 ifnull(nullif(qb.chapter_name, ''), 'Unnamed Module') as chapter_name
+                          from edu_question_bank qb
+                          where qb.status = '0'
+                          <if test="courseName != null and courseName != ''">
+                              and qb.course_name = #{courseName}
+                          </if>
+                      ) normalized
+                 group by normalized.course_name,
+                          normalized.chapter_code,
+                          normalized.catalog_chapter_code,
+                          normalized.chapter_name
+             ) grouped
+        order by grouped.course_name asc, grouped.chapter_code asc, grouped.id asc
+    </select>
+
+    <select id="selectTeacherCatalogsByScope" resultType="java.util.Map">
+        select min(ar.id) as id,
+               qb.course_name as courseName,
+               ifnull(nullif(qb.chapter_code, ''), qb.chapter_name) as chapterCode,
+               qb.chapter_name as chapterName,
+               count(1) as answerCount
+        from edu_student_answer_record ar
+                 join education_legacy_piclass.legacy_staging_student_profile sp on ar.student_no = sp.student_no
+                 left join edu_question_bank qb on ar.question_id = qb.id
+        where sp.class_code in
+        <foreach collection="legacyClassCodes" item="code" open="(" separator="," close=")">
+            #{code}
+        </foreach>
+        <if test="courseNames != null and courseNames.size() > 0">
+          and qb.course_name in
+            <foreach collection="courseNames" item="course" open="(" separator="," close=")">
+                #{course}
+            </foreach>
+        </if>
+          and qb.course_name is not null
+          and qb.course_name != ''
+          and qb.chapter_name is not null
+          and qb.chapter_name != ''
+        <if test="courseName != null and courseName != ''">
+            and qb.course_name = #{courseName}
+        </if>
+        group by qb.course_name, qb.chapter_code, qb.chapter_name
+        order by qb.course_name asc, answerCount desc, qb.chapter_name asc
+    </select>
+
+    <select id="selectQuestionBankCandidates" resultType="java.util.Map">
+        select id,
+               course_name as courseName,
+               chapter_code as chapterCode,
+               chapter_name as chapterName,
+               question_type as questionType,
+               question_stem as questionStem,
+               options_json as optionsJson,
+               standard_answer as standardAnswer,
+               analysis,
+               knowledge_point as knowledgePoint,
+               case
+                   when qb.difficulty_level is not null and qb.difficulty_level != '' then qb.difficulty_level
+                   when stats.correctRate is null then 'medium'
+                   when stats.correctRate &lt; 40 then 'hard'
+                   when stats.correctRate &lt; 75 then 'medium'
+                   else 'easy'
+               end as difficultyLevel,
+               ifnull(stats.correctRate, 0) as historicalCorrectRate
+        from edu_question_bank qb
+                 left join (
+                     select ar.question_id,
+                            round(avg(case when ar.is_correct = '1' then 100 else 0 end), 2) as correctRate
+                     from edu_student_answer_record ar
+                     group by ar.question_id
+                 ) stats on qb.id = stats.question_id
+        where status = '0'
+        <if test="courseName != null and courseName != ''">
+            and qb.course_name = #{courseName}
+        </if>
+        <if test="(chapterCode != null and chapterCode != '') or (chapterName != null and chapterName != '')">
+            and (
+            <if test="chapterCode != null and chapterCode != ''">
+                qb.chapter_code = #{chapterCode}
+            </if>
+            <if test="chapterCode != null and chapterCode != '' and chapterName != null and chapterName != ''">
+                or
+            </if>
+            <if test="chapterName != null and chapterName != ''">
+                qb.chapter_name = #{chapterName}
+            </if>
+            )
+        </if>
+        <if test="questionType != null and questionType != ''">
+            and qb.question_type = #{questionType}
+        </if>
+        <if test="difficultyLevel != null and difficultyLevel != ''">
+            and (
+                case
+                    when qb.difficulty_level is not null and qb.difficulty_level != '' then qb.difficulty_level
+                    when stats.correctRate is null then 'medium'
+                    when stats.correctRate &lt; 40 then 'hard'
+                    when stats.correctRate &lt; 75 then 'medium'
+                    else 'easy'
+                end
+            ) = #{difficultyLevel}
+        </if>
+        order by rand()
+        limit #{limit}
+    </select>
+
+    <select id="selectStudentDiagnosisOverview" resultType="java.util.Map">
+        select count(1) as answerCount,
+               sum(case when is_correct = '1' then 1 else 0 end) as correctCount,
+               round(ifnull(avg(case when is_correct = '1' then 100 else 0 end), 0), 2) as correctRate,
+               sum(case when submit_time >= date_sub(now(), interval 7 day) then 1 else 0 end) as recentAnswerCount,
+               round(ifnull(avg(case when submit_time >= date_sub(now(), interval 7 day) and is_correct = '1' then 100
+                                     when submit_time >= date_sub(now(), interval 7 day) then 0 end), 0), 2) as recentCorrectRate
+        from edu_student_answer_record
+        where student_no = #{studentNo}
+    </select>
+
+    <select id="selectStudentChapterDiagnosis" resultType="java.util.Map">
+        select qb.course_name as courseName,
+               ifnull(nullif(qb.chapter_code, ''), qb.chapter_name) as chapterCode,
+               qb.chapter_name as chapterName,
+               count(1) as answerCount,
+               sum(case when ar.is_correct = '1' then 1 else 0 end) as correctCount,
+               sum(case when ar.is_correct = '0' then 1 else 0 end) as wrongCount,
+               round(ifnull(avg(case when ar.is_correct = '1' then 100 else 0 end), 0), 2) as correctRate
+        from edu_student_answer_record ar
+                 left join edu_question_bank qb on ar.question_id = qb.id
+        where ar.student_no = #{studentNo}
+        group by qb.course_name, qb.chapter_code, qb.chapter_name
+        order by correctRate asc, answerCount desc, qb.chapter_code asc
+    </select>
+
+    <select id="selectStudentWrongQuestions" resultType="java.util.Map">
+        select qb.id as questionId,
+               qb.question_stem as questionStem,
+               qb.chapter_code as chapterCode,
+               qb.chapter_name as chapterName,
+               qb.knowledge_point as knowledgePoint,
+               qb.standard_answer as standardAnswer,
+               qb.analysis as analysis,
+               count(1) as wrongCount,
+               max(ar.submit_time) as lastWrongTime
+        from edu_student_answer_record ar
+                 left join edu_question_bank qb on ar.question_id = qb.id
+        where ar.student_no = #{studentNo}
+          and ar.is_correct = '0'
+        group by qb.id, qb.question_stem, qb.chapter_code, qb.chapter_name, qb.knowledge_point, qb.standard_answer, qb.analysis
+        order by wrongCount desc, lastWrongTime desc
+        limit #{limit}
+    </select>
+
+    <select id="selectStudentWeakKnowledgePoints" resultType="java.util.Map">
+        select qb.knowledge_point as knowledgePoint,
+               count(1) as answerCount,
+               sum(case when ar.is_correct = '0' then 1 else 0 end) as wrongCount,
+               round(ifnull(avg(case when ar.is_correct = '1' then 100 else 0 end), 0), 2) as correctRate
+        from edu_student_answer_record ar
+                 left join edu_question_bank qb on ar.question_id = qb.id
+        where ar.student_no = #{studentNo}
+          and qb.knowledge_point is not null
+          and qb.knowledge_point != ''
+        group by qb.knowledge_point
+        order by correctRate asc, wrongCount desc
+        limit #{limit}
+    </select>
+
+    <select id="selectStudentProgramOverview" resultType="java.util.Map">
+        select count(1) as submitCount,
+               count(distinct assignment_source_id) as assignmentCount,
+               round(ifnull(avg(score), 0), 2) as averageScore,
+               max(submit_time) as latestSubmitTime
+        from edu_program_answer_record
+        where student_no = #{studentNo}
+    </select>
+
+    <select id="selectStudentProgramWeakAssignments" resultType="java.util.Map">
+        select ea.title as assignmentTitle,
+               epar.assignment_source_id as assignmentSourceId,
+               count(1) as submitCount,
+               round(ifnull(avg(epar.score), 0), 2) as averageScore,
+               max(epar.submit_time) as latestSubmitTime
+        from edu_program_answer_record epar
+                 left join edu_assignment ea on ea.source_assignment_id = epar.assignment_source_id
+        where epar.student_no = #{studentNo}
+        group by ea.title, epar.assignment_source_id
+        order by averageScore asc, submitCount desc
+        limit #{limit}
+    </select>
+
+    <select id="selectPracticeRecommendationCandidates" resultType="java.util.Map">
+        select qb.id as questionId,
+               qb.course_name as courseName,
+               qb.question_type as questionType,
+               qb.chapter_code as chapterCode,
+               qb.chapter_name as chapterName,
+               qb.question_stem as questionStem,
+               qb.options_json as optionsJson,
+               qb.standard_answer as standardAnswer,
+               qb.analysis as analysis,
+               qb.knowledge_point as knowledgePoint,
+               qb.difficulty_level as difficultyLevel,
+               count(ar.id) as attemptCount,
+               sum(case when ar.is_correct = '1' then 1 else 0 end) as correctCount
+        from edu_question_bank qb
+                 left join edu_student_answer_record ar
+                           on qb.id = ar.question_id
+                               and ar.student_no = #{studentNo}
+        where qb.status = '0'
+        <if test="courseName != null and courseName != ''">
+            and qb.course_name = #{courseName}
+        </if>
+        <if test="(chapterCode != null and chapterCode != '') or (chapterName != null and chapterName != '')">
+            and (
+            <if test="chapterCode != null and chapterCode != ''">
+                qb.chapter_code = #{chapterCode}
+            </if>
+            <if test="chapterCode != null and chapterCode != '' and chapterName != null and chapterName != ''">
+                or
+            </if>
+            <if test="chapterName != null and chapterName != ''">
+                qb.chapter_name = #{chapterName}
+            </if>
+            )
+        </if>
+        group by qb.id, qb.course_name, qb.question_type, qb.chapter_code, qb.chapter_name, qb.question_stem,
+                 qb.options_json, qb.standard_answer, qb.analysis, qb.knowledge_point, qb.difficulty_level
+        order by correctCount asc, attemptCount asc, qb.id asc
+        limit #{limit}
+    </select>
+
+    <select id="selectStudentAnswerHistory" resultType="java.util.Map">
+        select ar.id,
+               ar.question_id as questionId,
+               ar.question_type as questionType,
+               ar.answer_content as answerContent,
+               ar.score,
+               ar.is_correct as isCorrect,
+               ar.submit_time as submitTime,
+               qb.course_name as courseName,
+               ifnull(nullif(qb.chapter_code, ''), qb.chapter_name) as chapterCode,
+               qb.chapter_name as chapterName,
+               qb.question_stem as questionStem,
+               qb.standard_answer as standardAnswer,
+               qb.analysis,
+               qb.knowledge_point as knowledgePoint
+        from edu_student_answer_record ar
+                 left join edu_question_bank qb on ar.question_id = qb.id
+        where ar.student_no = #{studentNo}
+        <if test="courseName != null and courseName != ''">
+            and qb.course_name = #{courseName}
+        </if>
+        <if test="chapterCode != null and chapterCode != ''">
+            and (qb.chapter_code = #{chapterCode} or qb.chapter_name = #{chapterCode})
+        </if>
+        <if test="questionType != null and questionType != ''">
+            and ar.question_type = #{questionType}
+        </if>
+        order by ar.submit_time desc, ar.id desc
+        limit #{limit}
+    </select>
+
+    <select id="selectStudentHistoryCatalogs" resultType="java.util.Map">
+        select min(ar.id) as id,
+               qb.course_name as courseName,
+               ifnull(nullif(qb.chapter_code, ''), qb.chapter_name) as chapterCode,
+               qb.chapter_name as chapterName,
+               count(1) as answerCount
+        from edu_student_answer_record ar
+                 left join edu_question_bank qb on ar.question_id = qb.id
+        where ar.student_no = #{studentNo}
+          and qb.course_name is not null
+          and qb.course_name != ''
+        <if test="courseName != null and courseName != ''">
+            and qb.course_name = #{courseName}
+        </if>
+        group by qb.course_name, qb.chapter_code, qb.chapter_name
+        order by qb.course_name asc, qb.chapter_code asc, answerCount desc
+    </select>
+
+    <select id="selectTeacherAnalysisOverviewByScope" resultType="java.util.Map">
+        select count(distinct sp.student_no) as studentCount,
+               count(1) as answerCount,
+               round(ifnull(avg(case when ar.is_correct = '1' then 100 else 0 end), 0), 2) as correctRate,
+               count(distinct case when qb.knowledge_point is not null and qb.knowledge_point != '' then qb.knowledge_point end) as knowledgePointCount
+        from edu_student_answer_record ar
+                 join education_legacy_piclass.legacy_staging_student_profile sp on ar.student_no = sp.student_no
+                 left join edu_question_bank qb on ar.question_id = qb.id
+        where sp.class_code in
+        <foreach collection="legacyClassCodes" item="code" open="(" separator="," close=")">
+            #{code}
+        </foreach>
+        <if test="courseNames != null and courseNames.size() > 0">
+          and qb.course_name in
+            <foreach collection="courseNames" item="course" open="(" separator="," close=")">
+                #{course}
+            </foreach>
+        </if>
+    </select>
+
+    <select id="selectTeacherAnalysisChaptersByScope" resultType="java.util.Map">
+        select qb.course_name as courseName,
+               ifnull(nullif(qb.chapter_code, ''), qb.chapter_name) as chapterCode,
+               qb.chapter_name as chapterName,
+               count(distinct sp.student_no) as studentCount,
+               count(1) as answerCount,
+               sum(case when ar.is_correct = '1' then 1 else 0 end) as correctCount,
+               round(ifnull(avg(case when ar.is_correct = '1' then 100 else 0 end), 0), 2) as correctRate
+        from edu_student_answer_record ar
+                 join education_legacy_piclass.legacy_staging_student_profile sp on ar.student_no = sp.student_no
+                 left join edu_question_bank qb on ar.question_id = qb.id
+        where sp.class_code in
+        <foreach collection="legacyClassCodes" item="code" open="(" separator="," close=")">
+            #{code}
+        </foreach>
+        <if test="courseNames != null and courseNames.size() > 0">
+          and qb.course_name in
+            <foreach collection="courseNames" item="course" open="(" separator="," close=")">
+                #{course}
+            </foreach>
+        </if>
+          and qb.chapter_name is not null
+          and qb.chapter_name != ''
+        group by qb.course_name, qb.chapter_code, qb.chapter_name
+        order by correctRate asc, answerCount desc
+    </select>
+
+    <select id="selectTeacherHotWrongQuestions" resultType="java.util.Map">
+        select qb.id as questionId,
+               qb.question_stem as questionStem,
+               qb.chapter_code as chapterCode,
+               qb.chapter_name as chapterName,
+               qb.knowledge_point as knowledgePoint,
+               qb.standard_answer as standardAnswer,
+               qb.analysis as analysis,
+               count(1) as wrongCount,
+               count(distinct sp.student_no) as wrongStudentCount
+        from edu_student_answer_record ar
+                 join education_legacy_piclass.legacy_staging_student_profile sp on ar.student_no = sp.student_no
+                 left join edu_question_bank qb on ar.question_id = qb.id
+        where sp.class_code = #{legacyClassCode}
+          and ar.is_correct = '0'
+        group by qb.id, qb.question_stem, qb.chapter_code, qb.chapter_name, qb.knowledge_point, qb.standard_answer, qb.analysis
+        order by wrongStudentCount desc, wrongCount desc
+        limit #{limit}
+    </select>
+
+    <select id="selectTeacherKnowledgePoints" resultType="java.util.Map">
+        select qb.knowledge_point as knowledgePoint,
+               count(1) as answerCount,
+               sum(case when ar.is_correct = '0' then 1 else 0 end) as wrongCount,
+               count(distinct sp.student_no) as studentCount,
+               round(ifnull(avg(case when ar.is_correct = '1' then 100 else 0 end), 0), 2) as correctRate
+        from edu_student_answer_record ar
+                 join education_legacy_piclass.legacy_staging_student_profile sp on ar.student_no = sp.student_no
+                 left join edu_question_bank qb on ar.question_id = qb.id
+        where sp.class_code = #{legacyClassCode}
+          and qb.knowledge_point is not null
+          and qb.knowledge_point != ''
+        group by qb.knowledge_point
+        order by correctRate asc, wrongCount desc
+        limit #{limit}
+    </select>
+
+    <select id="selectTeacherAssignmentOverview" resultType="java.util.Map">
+        select count(distinct ea.id) as assignmentCount,
+               count(distinct eas.student_no) as studentCount,
+               count(1) as scoreCount,
+               round(ifnull(avg(eas.total_score), 0), 2) as averageTotalScore,
+               round(ifnull(avg(eas.program_score), 0), 2) as averageProgramScore
+        from edu_assignment ea
+                 left join edu_assignment_score eas on eas.assignment_id = ea.id
+        where ea.class_code = #{legacyClassCode}
+    </select>
+
+    <select id="selectTeacherAssignmentSummaries" resultType="java.util.Map">
+        select ea.title as assignmentTitle,
+               ea.source_assignment_id as assignmentSourceId,
+               count(eas.id) as scoreCount,
+               round(ifnull(avg(eas.total_score), 0), 2) as averageTotalScore,
+               round(ifnull(avg(eas.program_score), 0), 2) as averageProgramScore,
+               max(eas.score_time) as latestScoreTime
+        from edu_assignment ea
+                 left join edu_assignment_score eas on eas.assignment_id = ea.id
+        where ea.class_code = #{legacyClassCode}
+        group by ea.title, ea.source_assignment_id
+        order by latestScoreTime desc, averageTotalScore asc
+        limit #{limit}
+    </select>
+
+    <select id="selectTeacherStudentModulePerformanceByScope" resultType="java.util.Map">
+        select sp.student_no as studentNo,
+               sp.student_name as studentName,
+               qb.course_name as courseName,
+               ifnull(nullif(qb.chapter_code, ''), qb.chapter_name) as chapterCode,
+               qb.chapter_name as chapterName,
+               count(1) as answerCount,
+               sum(case when ar.is_correct = '1' then 1 else 0 end) as correctCount,
+               sum(case when ar.is_correct = '0' then 1 else 0 end) as wrongCount,
+               round(ifnull(avg(case when ar.is_correct = '1' then 100 else 0 end), 0), 2) as correctRate,
+               max(ar.submit_time) as latestSubmitTime
+        from edu_student_answer_record ar
+                 join education_legacy_piclass.legacy_staging_student_profile sp on ar.student_no = sp.student_no
+                 left join edu_question_bank qb on ar.question_id = qb.id
+        where sp.class_code in
+        <foreach collection="legacyClassCodes" item="code" open="(" separator="," close=")">
+            #{code}
+        </foreach>
+        <if test="courseNames != null and courseNames.size() > 0">
+          and qb.course_name in
+            <foreach collection="courseNames" item="course" open="(" separator="," close=")">
+                #{course}
+            </foreach>
+        </if>
+          and qb.chapter_name is not null
+          and qb.chapter_name != ''
+        group by sp.student_no, sp.student_name, qb.course_name, qb.chapter_code, qb.chapter_name
+        order by sp.student_name asc, correctRate asc, answerCount desc
+        limit #{limit}
+    </select>
+
+    <select id="selectTeacherStudentManagementPageByScope" resultType="java.util.Map">
+        select sp.student_no as studentNo,
+               sp.student_name as studentName,
+               qb.course_name as courseName,
+               ifnull(nullif(qb.chapter_code, ''), qb.chapter_name) as chapterCode,
+               qb.chapter_name as chapterName,
+               count(1) as answerCount,
+               sum(case when ar.is_correct = '1' then 1 else 0 end) as correctCount,
+               sum(case when ar.is_correct = '0' then 1 else 0 end) as wrongCount,
+               round(ifnull(avg(case when ar.is_correct = '1' then 100 else 0 end), 0), 2) as correctRate,
+               max(ar.submit_time) as latestSubmitTime
+        from edu_student_answer_record ar
+                 join education_legacy_piclass.legacy_staging_student_profile sp on ar.student_no = sp.student_no
+                 left join edu_question_bank qb on ar.question_id = qb.id
+        where sp.class_code in
+        <foreach collection="legacyClassCodes" item="code" open="(" separator="," close=")">
+            #{code}
+        </foreach>
+        <if test="courseNames != null and courseNames.size() > 0">
+          and qb.course_name in
+            <foreach collection="courseNames" item="course" open="(" separator="," close=")">
+                #{course}
+            </foreach>
+        </if>
+          and qb.chapter_name is not null
+          and qb.chapter_name != ''
+        <if test="studentName != null and studentName != ''">
+            and sp.student_name like concat('%', #{studentName}, '%')
+        </if>
+        <if test="courseName != null and courseName != ''">
+            and qb.course_name = #{courseName}
+        </if>
+        <if test="chapterCode != null and chapterCode != ''">
+            and (qb.chapter_code = #{chapterCode} or qb.chapter_name = #{chapterCode})
+        </if>
+        group by sp.student_no, sp.student_name, qb.course_name, qb.chapter_code, qb.chapter_name
+        order by sp.student_name asc, answerCount desc, correctRate asc
+    </select>
+
+    <select id="selectTeacherStudentAnswerHistoryByScope" resultType="java.util.Map">
+        select ar.id,
+               sp.student_no as studentNo,
+               sp.student_name as studentName,
+               ar.question_type as questionType,
+               ar.answer_content as answerContent,
+               ar.score,
+               ar.is_correct as isCorrect,
+               ar.submit_time as submitTime,
+               qb.course_name as courseName,
+               ifnull(nullif(qb.chapter_code, ''), qb.chapter_name) as chapterCode,
+               qb.chapter_name as chapterName,
+               qb.question_stem as questionStem,
+               qb.standard_answer as standardAnswer,
+               qb.analysis,
+               qb.knowledge_point as knowledgePoint
+        from edu_student_answer_record ar
+                 join education_legacy_piclass.legacy_staging_student_profile sp on ar.student_no = sp.student_no
+                 left join edu_question_bank qb on ar.question_id = qb.id
+        where sp.class_code in
+        <foreach collection="legacyClassCodes" item="code" open="(" separator="," close=")">
+            #{code}
+        </foreach>
+        <if test="courseNames != null and courseNames.size() > 0">
+          and qb.course_name in
+            <foreach collection="courseNames" item="course" open="(" separator="," close=")">
+                #{course}
+            </foreach>
+        </if>
+          and sp.student_no = #{studentNo}
+        order by ar.submit_time desc, ar.id desc
+        limit #{limit}
+    </select>
+
+    <select id="selectScopedStudentBaseInfo" resultType="java.util.Map">
+        select sp.student_no as studentNo,
+               sp.student_name as studentName,
+               sp.class_code as classCode
+        from education_legacy_piclass.legacy_staging_student_profile sp
+        where sp.class_code in
+        <foreach collection="legacyClassCodes" item="code" open="(" separator="," close=")">
+            #{code}
+        </foreach>
+          and sp.student_no = #{studentNo}
+        limit 1
+    </select>
+
+</mapper>
+

@@ -10,6 +10,7 @@ public class EduRegisterBody
     private String code;
     private String uuid;
     private String roleKey;
+    private String majorKey;
     private Integer gradeNo;
     private Integer classNo;
 
@@ -61,6 +62,16 @@ public class EduRegisterBody
     public void setRoleKey(String roleKey)
     {
         this.roleKey = roleKey;
+    }
+
+    public String getMajorKey()
+    {
+        return majorKey;
+    }
+
+    public void setMajorKey(String majorKey)
+    {
+        this.majorKey = majorKey;
     }
 
     public Integer getGradeNo()

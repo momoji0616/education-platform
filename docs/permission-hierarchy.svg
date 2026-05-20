@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="980" viewBox="0 0 1600 980">
+  <defs>
+    <style>
+      .title { font: 700 34px 'Microsoft YaHei', 'PingFang SC', sans-serif; fill: #1f2937; }
+      .subtitle { font: 400 18px 'Microsoft YaHei', 'PingFang SC', sans-serif; fill: #5b6b7f; }
+      .box-title { font: 700 22px 'Microsoft YaHei', 'PingFang SC', sans-serif; fill: #0f172a; }
+      .box-text { font: 400 18px 'Microsoft YaHei', 'PingFang SC', sans-serif; fill: #334155; }
+      .small-text { font: 400 16px 'Microsoft YaHei', 'PingFang SC', sans-serif; fill: #475569; }
+      .green { fill: #ecfdf5; stroke: #34d399; stroke-width: 2; rx: 24; ry: 24; }
+      .blue { fill: #eff6ff; stroke: #60a5fa; stroke-width: 2; rx: 24; ry: 24; }
+      .orange { fill: #fff7ed; stroke: #fb923c; stroke-width: 2; rx: 24; ry: 24; }
+      .purple { fill: #f5f3ff; stroke: #a78bfa; stroke-width: 2; rx: 24; ry: 24; }
+      .line { stroke: #6b7280; stroke-width: 3; fill: none; }
+    </style>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="5" orient="auto" markerUnits="strokeWidth">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#6b7280"/>
+    </marker>
+  </defs>
+
+  <rect width="1600" height="980" fill="#f7fafc"/>
+  <rect x="40" y="30" width="1520" height="920" rx="30" ry="30" fill="#f8fbfd" stroke="#e2e8f0" stroke-width="2"/>
+
+  <text x="80" y="95" class="title">系统权限层级图</text>
+  <text x="80" y="130" class="subtitle">管理者、教师、学生三类角色的功能边界划分</text>
+
+  <rect x="650" y="160" width="300" height="90" class="green"/>
+  <text x="800" y="197" text-anchor="middle" class="box-title">系统用户</text>
+  <text x="800" y="227" text-anchor="middle" class="box-text">统一登录入口</text>
+
+  <rect x="110" y="330" width="360" height="120" class="orange"/>
+  <text x="290" y="374" text-anchor="middle" class="box-title">管理者</text>
+  <text x="290" y="410" text-anchor="middle" class="box-text">主控端全局管理</text>
+
+  <rect x="620" y="330" width="360" height="120" class="blue"/>
+  <text x="800" y="374" text-anchor="middle" class="box-title">教师</text>
+  <text x="800" y="410" text-anchor="middle" class="box-text">Pad 端教学业务</text>
+
+  <rect x="1130" y="330" width="360" height="120" class="purple"/>
+  <text x="1310" y="374" text-anchor="middle" class="box-title">学生</text>
+  <text x="1310" y="410" text-anchor="middle" class="box-text">Pad 端学习业务</text>
+
+  <rect x="70" y="560" width="440" height="280" class="orange"/>
+  <text x="290" y="604" text-anchor="middle" class="box-title">管理者权限</text>
+  <text x="290" y="648" text-anchor="middle" class="small-text">查看全局班级与成绩数据</text>
+  <text x="290" y="686" text-anchor="middle" class="small-text">管理教师与学生账号</text>
+  <text x="290" y="724" text-anchor="middle" class="small-text">发布任务与查看汇总信息</text>
+  <text x="290" y="762" text-anchor="middle" class="small-text">进入 Pad 端入口并进行角色区分</text>
+
+  <rect x="580" y="560" width="440" height="280" class="blue"/>
+  <text x="800" y="604" text-anchor="middle" class="box-title">教师权限</text>
+  <text x="800" y="648" text-anchor="middle" class="small-text">布置作业与考试</text>
+  <text x="800" y="686" text-anchor="middle" class="small-text">查看学生成绩与学情分析</text>
+  <text x="800" y="724" text-anchor="middle" class="small-text">智能组卷与教学辅助</text>
+  <text x="800" y="762" text-anchor="middle" class="small-text">成绩预测与 RAG 智能问答</text>
+
+  <rect x="1090" y="560" width="440" height="280" class="purple"/>
+  <text x="1310" y="604" text-anchor="middle" class="box-title">学生权限</text>
+  <text x="1310" y="648" text-anchor="middle" class="small-text">查看作业与考试</text>
+  <text x="1310" y="686" text-anchor="middle" class="small-text">完成练习、刷题与诊断</text>
+  <text x="1310" y="724" text-anchor="middle" class="small-text">查看个人成绩与学习规划</text>
+  <text x="1310" y="762" text-anchor="middle" class="small-text">成绩预测与 RAG 智能问答</text>
+
+  <line x1="800" y1="250" x2="290" y2="330" class="line" marker-end="url(#arrow)"/>
+  <line x1="800" y1="250" x2="800" y2="330" class="line" marker-end="url(#arrow)"/>
+  <line x1="800" y1="250" x2="1310" y2="330" class="line" marker-end="url(#arrow)"/>
+
+  <line x1="290" y1="450" x2="290" y2="560" class="line" marker-end="url(#arrow)"/>
+  <line x1="800" y1="450" x2="800" y2="560" class="line" marker-end="url(#arrow)"/>
+  <line x1="1310" y1="450" x2="1310" y2="560" class="line" marker-end="url(#arrow)"/>
+</svg>

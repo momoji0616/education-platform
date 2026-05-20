@@ -2,11 +2,9 @@
   <div class="sidebar-logo-container" :class="{ 'collapse': collapse }">
     <transition name="sidebarLogoFade">
       <router-link v-if="collapse" key="collapse" class="sidebar-logo-link" to="/">
-        <img v-if="logo" :src="logo" class="sidebar-logo" />
-        <h1 v-else class="sidebar-title">{{ title }}</h1>
+        <h1 class="sidebar-title">{{ title }}</h1>
       </router-link>
       <router-link v-else key="expand" class="sidebar-logo-link" to="/">
-        <img v-if="logo" :src="logo" class="sidebar-logo" />
         <h1 class="sidebar-title">{{ title }}</h1>
       </router-link>
     </transition>
@@ -14,7 +12,7 @@
 </template>
 
 <script setup>
-import logo from '@/assets/logo/logo.png'
+import { computed } from 'vue'
 import useSettingsStore from '@/store/modules/settings'
 import variables from '@/assets/styles/variables.module.scss'
 
@@ -82,9 +80,13 @@ const getLogoTextColor = computed(() => {
       color: v-bind(getLogoTextColor);
       font-weight: 600;
       line-height: 50px;
-      font-size: 14px;
+      font-size: 13px;
       font-family: Avenir, Helvetica Neue, Arial, Helvetica, sans-serif;
       vertical-align: middle;
+      max-width: calc(100% - 50px);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
   }
 

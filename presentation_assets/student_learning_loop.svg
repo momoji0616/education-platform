@@ -1,0 +1,73 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 0 1920 1080">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#F8FBFF"/>
+      <stop offset="0.55" stop-color="#EDF6FF"/>
+      <stop offset="1" stop-color="#DCEBFF"/>
+    </linearGradient>
+    <linearGradient id="blue" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#1D7CFF"/>
+      <stop offset="1" stop-color="#0B45D9"/>
+    </linearGradient>
+    <radialGradient id="bubble" cx="35%" cy="30%" r="70%">
+      <stop offset="0" stop-color="#FFFFFF" stop-opacity="0.95"/>
+      <stop offset="0.55" stop-color="#CFE5FF" stop-opacity="0.5"/>
+      <stop offset="1" stop-color="#8CB9FF" stop-opacity="0.16"/>
+    </radialGradient>
+    <filter id="shadow" x="-20%" y="-22%" width="140%" height="150%">
+      <feDropShadow dx="0" dy="18" stdDeviation="18" flood-color="#1E3A8A" flood-opacity="0.16"/>
+    </filter>
+    <marker id="arrow" viewBox="0 0 14 14" refX="10.5" refY="7" markerWidth="13" markerHeight="13" orient="auto">
+      <path d="M2,2 L12,7 L2,12 Z" fill="#1D6FFF"/>
+    </marker>
+    <style>
+      .title{font:800 64px "Microsoft YaHei","PingFang SC",Arial,sans-serif;fill:#07145A}
+      .subtitle{font:500 30px "Microsoft YaHei","PingFang SC",Arial,sans-serif;fill:#1557D6}
+      .node-title{font:800 31px "Microsoft YaHei","PingFang SC",Arial,sans-serif;fill:#07145A}
+      .node-desc{font:500 23px "Microsoft YaHei","PingFang SC",Arial,sans-serif;fill:#0B2A78}
+      .num{font:900 30px "Microsoft YaHei",Arial,sans-serif;fill:#fff}
+      .center{font:800 42px "Microsoft YaHei","PingFang SC",Arial,sans-serif;fill:#07145A}
+      .center-sub{font:500 25px "Microsoft YaHei","PingFang SC",Arial,sans-serif;fill:#264B91}
+      .footer{font:500 27px "Microsoft YaHei","PingFang SC",Arial,sans-serif;fill:#17336F}
+    </style>
+  </defs>
+  <rect width="1920" height="1080" fill="url(#bg)"/>
+  <g opacity=".75">
+    <circle cx="1710" cy="70" r="112" fill="url(#bubble)"/>
+    <circle cx="1870" cy="245" r="115" fill="url(#bubble)"/>
+    <circle cx="92" cy="920" r="125" fill="url(#bubble)"/>
+    <circle cx="1788" cy="930" r="128" fill="url(#bubble)"/>
+    <circle cx="330" cy="990" r="58" fill="url(#bubble)"/>
+    <circle cx="1535" cy="165" r="54" fill="url(#bubble)"/>
+    <circle cx="58" cy="520" r="32" fill="url(#bubble)"/>
+  </g>
+  <text x="96" y="118" class="title">学生端七大功能形成学业提升闭环</text>
+  <text x="100" y="176" class="subtitle">记录学习过程 → 分析问题 → 生成计划 → 针对训练 → 预测风险 → AI 支持 → 持续优化</text>
+
+  <g transform="translate(960 575)">
+    <circle r="218" fill="#fff" opacity=".8" filter="url(#shadow)"/>
+    <circle r="178" fill="#F4F9FF" stroke="#BFD9FF" stroke-width="3"/>
+    <circle r="146" fill="url(#bubble)" opacity=".75"/>
+    <text y="-18" text-anchor="middle" class="center">持续学业提升</text>
+    <text y="30" text-anchor="middle" class="center-sub">新数据不断回流</text>
+    <text y="66" text-anchor="middle" class="center-sub">诊断、规划、推荐持续更新</text>
+  </g>
+  <g fill="none" stroke="#1D6FFF" stroke-width="8" stroke-linecap="round" marker-end="url(#arrow)">
+    <path d="M930 260 C1070 250 1190 300 1275 386"/>
+    <path d="M1390 484 C1440 595 1410 720 1305 805"/>
+    <path d="M1175 890 C1030 958 858 945 735 850"/>
+    <path d="M570 720 C510 600 535 472 630 382"/>
+    <path d="M735 305 C790 278 845 265 900 260"/>
+  </g>
+  <g filter="url(#shadow)">
+    <g transform="translate(960 252)"><rect x="-175" y="-70" width="350" height="140" rx="28" fill="#fff" stroke="#C8DDFF"/><circle cx="-130" cy="-30" r="31" fill="url(#blue)"/><text x="-130" y="-19" text-anchor="middle" class="num">1</text><text x="-80" y="-24" class="node-title">历史做题</text><text x="-80" y="25" class="node-desc">记录真实作答轨迹</text></g>
+    <g transform="translate(1320 385)"><rect x="-175" y="-70" width="350" height="140" rx="28" fill="#fff" stroke="#C8DDFF"/><circle cx="-130" cy="-30" r="31" fill="url(#blue)"/><text x="-130" y="-19" text-anchor="middle" class="num">2</text><text x="-80" y="-24" class="node-title">学生诊断</text><text x="-80" y="25" class="node-desc">定位薄弱章节错题</text></g>
+    <g transform="translate(1402 645)"><rect x="-175" y="-70" width="350" height="140" rx="28" fill="#fff" stroke="#C8DDFF"/><circle cx="-130" cy="-30" r="31" fill="url(#blue)"/><text x="-130" y="-19" text-anchor="middle" class="num">3</text><text x="-80" y="-24" class="node-title">学习规划</text><text x="-80" y="25" class="node-desc">生成阶段提升任务</text></g>
+    <g transform="translate(1180 890)"><rect x="-175" y="-70" width="350" height="140" rx="28" fill="#fff" stroke="#C8DDFF"/><circle cx="-130" cy="-30" r="31" fill="url(#blue)"/><text x="-130" y="-19" text-anchor="middle" class="num">4</text><text x="-80" y="-24" class="node-title">智能刷题</text><text x="-80" y="25" class="node-desc">围绕薄弱点训练</text></g>
+    <g transform="translate(740 890)"><rect x="-175" y="-70" width="350" height="140" rx="28" fill="#fff" stroke="#C8DDFF"/><circle cx="-130" cy="-30" r="31" fill="url(#blue)"/><text x="-130" y="-19" text-anchor="middle" class="num">5</text><text x="-80" y="-24" class="node-title">成绩预测</text><text x="-80" y="25" class="node-desc">提前识别学习风险</text></g>
+    <g transform="translate(518 645)"><rect x="-175" y="-70" width="350" height="140" rx="28" fill="#fff" stroke="#C8DDFF"/><circle cx="-130" cy="-30" r="31" fill="url(#blue)"/><text x="-130" y="-19" text-anchor="middle" class="num">6</text><text x="-80" y="-24" class="node-title">师生AI助手</text><text x="-80" y="25" class="node-desc">互动答疑与学习支持</text></g>
+    <g transform="translate(600 385)"><rect x="-175" y="-70" width="350" height="140" rx="28" fill="#fff" stroke="#C8DDFF"/><circle cx="-130" cy="-30" r="31" fill="url(#blue)"/><text x="-130" y="-19" text-anchor="middle" class="num">7</text><text x="-80" y="-24" class="node-title">RAG智能问答</text><text x="-80" y="25" class="node-desc">结合资料解释错因</text></g>
+  </g>
+  <rect x="250" y="970" width="1420" height="68" rx="34" fill="#fff" opacity=".85" stroke="#C8DDFF"/>
+  <text x="960" y="1015" text-anchor="middle" class="footer">学生每完成一次训练，都会形成新的学习数据，系统再基于新数据更新诊断、规划和推荐。</text>
+</svg>

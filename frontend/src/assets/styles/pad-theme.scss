@@ -17,6 +17,90 @@
   --pad-radius-md: 14px;
 }
 
+.role-shell,
+.analysis-shell,
+.teacher-students-page,
+.report-shell,
+.plan-shell,
+.practice-shell,
+.history-shell,
+.paper-shell,
+.rag-shell,
+.prediction-container,
+.pad-page,
+.edu-auth-page,
+.pad-fullscreen {
+  font-size: 18px !important;
+}
+
+.role-shell p,
+.analysis-shell p,
+.teacher-students-page p,
+.report-shell p,
+.plan-shell p,
+.practice-shell p,
+.history-shell p,
+.paper-shell p,
+.rag-shell p,
+.prediction-container p,
+.pad-page p,
+.edu-auth-page p,
+.pad-fullscreen p,
+.role-shell span,
+.analysis-shell span,
+.teacher-students-page span,
+.report-shell span,
+.plan-shell span,
+.practice-shell span,
+.history-shell span,
+.paper-shell span,
+.rag-shell span,
+.prediction-container span,
+.pad-page span,
+.edu-auth-page span,
+.pad-fullscreen span,
+.role-shell button,
+.analysis-shell button,
+.teacher-students-page button,
+.report-shell button,
+.plan-shell button,
+.practice-shell button,
+.history-shell button,
+.paper-shell button,
+.rag-shell button,
+.prediction-container button,
+.pad-page button,
+.edu-auth-page button,
+.pad-fullscreen button {
+  font-size: 17px;
+}
+
+.role-shell .el-table,
+.analysis-shell .el-table,
+.teacher-students-page .el-table,
+.report-shell .el-table,
+.plan-shell .el-table,
+.practice-shell .el-table,
+.history-shell .el-table,
+.paper-shell .el-table,
+.pad-page .el-table {
+  font-size: 17px !important;
+}
+
+.role-shell .el-card__header,
+.analysis-shell .el-card__header,
+.teacher-students-page .el-card__header,
+.report-shell .el-card__header,
+.plan-shell .el-card__header,
+.practice-shell .el-card__header,
+.history-shell .el-card__header,
+.paper-shell .el-card__header,
+.rag-shell .el-card__header,
+.prediction-container .el-card__header,
+.pad-page .el-card__header {
+  font-size: 20px !important;
+}
+
 .edu-auth-page,
 .pad-page,
 .rag-shell,
@@ -92,6 +176,30 @@
   color: var(--pad-text-sub) !important;
 }
 
+.analysis-shell .nav-title,
+.teacher-students-page .nav-title,
+.analysis-shell .panel-header,
+.teacher-students-page .panel-header,
+.analysis-shell .el-card__header,
+.teacher-students-page .el-card__header {
+  font-size: 20px;
+}
+
+.analysis-shell .eyebrow,
+.teacher-students-page .eyebrow {
+  font-size: 13px !important;
+}
+
+.analysis-shell .subtitle,
+.teacher-students-page .subtitle {
+  font-size: 16px;
+}
+
+.analysis-shell .overview-card span,
+.teacher-students-page .overview-card span {
+  font-size: 17px;
+}
+
 .pad-page .el-tabs__item.is-active,
 .prediction-container .el-tabs__item.is-active,
 .edu-auth-page .el-tabs__item.is-active {
@@ -149,6 +257,143 @@
   border-radius: 12px !important;
   box-shadow: 0 0 0 1px rgba(15, 23, 42, 0.08) inset !important;
   background: rgba(255, 255, 255, 0.94) !important;
+}
+
+/* 教师端/学生端左侧导航统一规范：覆盖各页面 scoped 导航差异 */
+.role-shell .side-nav,
+.analysis-shell .side-nav,
+.teacher-students-page .side-nav,
+.paper-shell .side-nav,
+.report-shell .side-nav,
+.plan-shell .side-nav,
+.practice-shell .side-nav,
+.history-shell .side-nav,
+.prediction-page .side-nav,
+.assistant-shell .teacher-nav,
+.assistant-shell .student-nav {
+  width: 100% !important;
+  min-width: 0 !important;
+  padding: 20px !important;
+  border-radius: 22px !important;
+  border: 1px solid rgba(15, 23, 42, 0.08) !important;
+  background: rgba(255, 255, 255, 0.94) !important;
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08) !important;
+  height: fit-content !important;
+}
+
+.role-shell .nav-title,
+.analysis-shell .nav-title,
+.teacher-students-page .nav-title,
+.paper-shell .nav-title,
+.report-shell .nav-title,
+.plan-shell .nav-title,
+.practice-shell .nav-title,
+.history-shell .nav-title,
+.prediction-page .nav-title,
+.assistant-shell .nav-title {
+  margin: 0 0 14px !important;
+  color: #0f172a !important;
+  font-size: 22px !important;
+  line-height: 1.35 !important;
+  font-weight: 800 !important;
+  letter-spacing: 0 !important;
+}
+
+.role-shell .nav-item,
+.analysis-shell .nav-item,
+.teacher-students-page .nav-item,
+.paper-shell .nav-item,
+.report-shell .nav-item,
+.plan-shell .nav-item,
+.practice-shell .nav-item,
+.history-shell .nav-item,
+.prediction-page .nav-item,
+.assistant-shell .nav-item {
+  width: 100% !important;
+  min-height: 0 !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: flex-start !important;
+  justify-content: flex-start !important;
+  gap: 6px !important;
+  padding: 18px !important;
+  margin: 0 0 12px !important;
+  border: 1px solid rgba(148, 163, 184, 0.18) !important;
+  border-radius: 18px !important;
+  background: #fff !important;
+  box-shadow: none !important;
+  color: #0f172a !important;
+  text-align: left !important;
+  cursor: pointer !important;
+}
+
+.role-shell .nav-item strong,
+.analysis-shell .nav-item strong,
+.teacher-students-page .nav-item strong,
+.paper-shell .nav-item strong,
+.report-shell .nav-item strong,
+.plan-shell .nav-item strong,
+.practice-shell .nav-item strong,
+.history-shell .nav-item strong,
+.prediction-page .nav-item strong,
+.assistant-shell .nav-item strong {
+  display: block !important;
+  color: #0f172a !important;
+  font-size: 21px !important;
+  line-height: 1.35 !important;
+  font-weight: 800 !important;
+  letter-spacing: 0 !important;
+  text-align: left !important;
+}
+
+.role-shell .nav-item span,
+.analysis-shell .nav-item span,
+.teacher-students-page .nav-item span,
+.paper-shell .nav-item span,
+.report-shell .nav-item span,
+.plan-shell .nav-item span,
+.practice-shell .nav-item span,
+.history-shell .nav-item span,
+.prediction-page .nav-item span,
+.assistant-shell .nav-item span {
+  display: block !important;
+  margin: 0 !important;
+  color: #64748b !important;
+  font-size: 17px !important;
+  line-height: 1.7 !important;
+  font-weight: 400 !important;
+  letter-spacing: 0 !important;
+  text-align: left !important;
+}
+
+.student-shell .nav-item.active,
+.student-shell .nav-item:hover,
+.report-shell .nav-item.active,
+.report-shell .nav-item:hover,
+.plan-shell .nav-item.active,
+.plan-shell .nav-item:hover,
+.practice-shell .nav-item.active,
+.practice-shell .nav-item:hover,
+.history-shell .nav-item.active,
+.history-shell .nav-item:hover,
+.prediction-page.student-shell .nav-item.active,
+.prediction-page.student-shell .nav-item:hover {
+  border-color: rgba(37, 99, 235, 0.45) !important;
+  background: rgba(239, 246, 255, 0.96) !important;
+}
+
+.teacher-shell .nav-item.active,
+.teacher-shell .nav-item:hover,
+.analysis-shell .nav-item.active,
+.analysis-shell .nav-item:hover,
+.teacher-students-page .nav-item.active,
+.teacher-students-page .nav-item:hover,
+.paper-shell .nav-item.active,
+.paper-shell .nav-item:hover,
+.prediction-page.teacher-shell .nav-item.active,
+.prediction-page.teacher-shell .nav-item:hover {
+  border-color: rgba(249, 115, 22, 0.5) !important;
+  background: rgba(255, 247, 237, 0.95) !important;
 }
 
 .pad-page .el-input__wrapper.is-focus,
@@ -219,6 +464,221 @@
 .pad-page .message-post,
 .pad-page .chart-card {
   box-shadow: var(--pad-shadow-soft);
+}
+
+/* Student Pad pages: keep feature pages as readable as the redesigned home. */
+.student-shell,
+.student-page-shell,
+.student-plan-page,
+.student-practice-page,
+.history-shell,
+.report-shell,
+.prediction-container,
+.rag-shell {
+  font-size: 18px !important;
+}
+
+.student-shell p,
+.student-page-shell p,
+.student-plan-page p,
+.student-practice-page p,
+.history-shell p,
+.report-shell p,
+.prediction-container p,
+.rag-shell p,
+.student-shell span,
+.student-page-shell span,
+.student-plan-page span,
+.student-practice-page span,
+.history-shell span,
+.report-shell span,
+.prediction-container span,
+.rag-shell span,
+.student-shell button,
+.student-page-shell button,
+.student-plan-page button,
+.student-practice-page button,
+.history-shell button,
+.report-shell button,
+.prediction-container button,
+.rag-shell button,
+.student-shell .el-button,
+.student-page-shell .el-button,
+.student-plan-page .el-button,
+.student-practice-page .el-button,
+.history-shell .el-button,
+.report-shell .el-button,
+.prediction-container .el-button,
+.rag-shell .el-button {
+  font-size: 18px !important;
+}
+
+.student-shell .eyebrow,
+.student-page-shell .eyebrow,
+.student-plan-page .eyebrow,
+.student-practice-page .eyebrow,
+.history-shell .eyebrow,
+.report-shell .eyebrow,
+.prediction-container .eyebrow,
+.rag-shell .eyebrow {
+  font-size: 15px !important;
+}
+
+.student-shell h1,
+.student-page-shell h1,
+.student-plan-page h1,
+.student-practice-page h1,
+.history-shell h1,
+.report-shell h1,
+.prediction-container h1,
+.rag-shell h1 {
+  font-size: 36px !important;
+}
+
+.student-shell .subtitle,
+.student-page-shell .subtitle,
+.student-plan-page .subtitle,
+.student-practice-page .subtitle,
+.history-shell .subtitle,
+.report-shell .subtitle,
+.student-plan-page .hero-text,
+.student-practice-page .hero-text,
+.prediction-container .page-description,
+.rag-shell .chat-title-wrap span {
+  font-size: 18px !important;
+  line-height: 1.75 !important;
+}
+
+.student-shell .nav-title,
+.student-page-shell .nav-title,
+.student-plan-page .nav-title,
+.student-practice-page .nav-title,
+.history-shell .nav-title,
+.report-shell .nav-title {
+  font-size: 21px !important;
+}
+
+.student-shell .nav-item strong,
+.student-page-shell .nav-item strong,
+.student-plan-page .nav-item strong,
+.student-practice-page .nav-item strong,
+.history-shell .nav-item strong,
+.report-shell .nav-item strong {
+  font-size: 19px !important;
+}
+
+.student-shell .nav-item span,
+.student-page-shell .nav-item span,
+.student-plan-page .nav-item span,
+.student-practice-page .nav-item span,
+.history-shell .nav-item span,
+.report-shell .nav-item span {
+  font-size: 17px !important;
+  line-height: 1.65 !important;
+}
+
+.student-shell .card-header span,
+.student-page-shell .card-header span,
+.student-plan-page .card-header span,
+.student-practice-page .card-header span,
+.history-shell .card-header span,
+.report-shell .card-header span,
+.student-shell .header-main span,
+.student-page-shell .header-main span,
+.student-plan-page .header-main span,
+.student-practice-page .header-main span,
+.history-shell .header-main span,
+.report-shell .header-main span {
+  font-size: 20px !important;
+}
+
+.student-shell .card-header p,
+.student-page-shell .card-header p,
+.student-plan-page .card-header p,
+.student-practice-page .card-header p,
+.history-shell .card-header p,
+.report-shell .card-header p,
+.student-shell .header-main p,
+.student-page-shell .header-main p,
+.student-plan-page .header-main p,
+.student-practice-page .header-main p,
+.history-shell .header-main p,
+.report-shell .header-main p,
+.student-shell .ai-summary p,
+.student-page-shell .ai-summary p,
+.student-plan-page .ai-summary p,
+.student-practice-page .ai-summary p,
+.history-shell .ai-summary p,
+.report-shell .ai-summary p,
+.student-plan-page .ai-inline-note p,
+.student-plan-page .deep-advice-card p {
+  font-size: 17px !important;
+}
+
+.student-shell .summary-card span,
+.student-page-shell .summary-card span,
+.student-plan-page .summary-card span,
+.student-practice-page .summary-card span,
+.history-shell .summary-card span,
+.report-shell .summary-card span,
+.student-shell .summary-card p,
+.student-page-shell .summary-card p,
+.student-plan-page .summary-card p,
+.student-practice-page .summary-card p,
+.history-shell .summary-card p,
+.report-shell .summary-card p,
+.student-shell .metric-box span,
+.student-page-shell .metric-box span,
+.student-plan-page .metric-box span,
+.student-practice-page .metric-box span,
+.history-shell .metric-box span,
+.report-shell .metric-box span {
+  font-size: 17px !important;
+}
+
+.student-shell .summary-card strong,
+.student-page-shell .summary-card strong,
+.student-plan-page .summary-card strong,
+.student-practice-page .summary-card strong,
+.history-shell .summary-card strong,
+.report-shell .summary-card strong {
+  font-size: 30px !important;
+}
+
+.student-shell .el-table,
+.student-page-shell .el-table,
+.student-plan-page .el-table,
+.student-practice-page .el-table,
+.history-shell .el-table,
+.report-shell .el-table,
+.student-shell .el-table th,
+.student-page-shell .el-table th,
+.student-plan-page .el-table th,
+.student-practice-page .el-table th,
+.history-shell .el-table th,
+.report-shell .el-table th,
+.student-shell .el-table td,
+.student-page-shell .el-table td,
+.student-plan-page .el-table td,
+.student-practice-page .el-table td,
+.history-shell .el-table td,
+.report-shell .el-table td {
+  font-size: 17px !important;
+}
+
+.student-shell .el-tag,
+.student-page-shell .el-tag,
+.student-plan-page .el-tag,
+.student-practice-page .el-tag,
+.history-shell .el-tag,
+.report-shell .el-tag,
+.student-shell small,
+.student-page-shell small,
+.student-plan-page small,
+.student-practice-page small,
+.history-shell small,
+.report-shell small {
+  font-size: 15px !important;
 }
 
 @media (max-width: 992px) {

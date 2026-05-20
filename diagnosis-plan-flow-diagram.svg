@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="1500" viewBox="0 0 1200 1500">
+  <defs>
+    <style>
+      .title { font: 700 28px "Microsoft YaHei", "PingFang SC", sans-serif; fill: #222; }
+      .text { font: 500 20px "Microsoft YaHei", "PingFang SC", sans-serif; fill: #222; }
+      .box { fill: #ffffff; stroke: #555; stroke-width: 2.2; }
+      .line { stroke: #555; stroke-width: 2.2; fill: none; }
+      .arrow { fill: #555; }
+    </style>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" class="arrow"/>
+    </marker>
+  </defs>
+  <rect width="1200" height="1500" fill="#fff"/>
+  <text x="600" y="48" text-anchor="middle" class="title">图3-5 学业诊断与学习规划联动流程图</text>
+
+  <rect x="390" y="90" width="420" height="68" class="box"/>
+  <text x="600" y="133" text-anchor="middle" class="text">获取学生历史做题记录</text>
+  <path d="M600 158 L600 188" class="line" marker-end="url(#arrow)"/>
+
+  <rect x="420" y="188" width="360" height="68" class="box"/>
+  <text x="600" y="231" text-anchor="middle" class="text">统计章节正确率</text>
+  <path d="M600 256 L600 286" class="line" marker-end="url(#arrow)"/>
+
+  <rect x="430" y="286" width="340" height="68" class="box"/>
+  <text x="600" y="329" text-anchor="middle" class="text">分析错题分布</text>
+  <path d="M600 354 L600 384" class="line" marker-end="url(#arrow)"/>
+
+  <rect x="410" y="384" width="380" height="68" class="box"/>
+  <text x="600" y="427" text-anchor="middle" class="text">识别薄弱知识点</text>
+  <path d="M600 452 L600 482" class="line" marker-end="url(#arrow)"/>
+
+  <rect x="390" y="482" width="420" height="68" class="box"/>
+  <text x="600" y="525" text-anchor="middle" class="text">生成学业诊断结果</text>
+  <path d="M600 550 L600 580" class="line" marker-end="url(#arrow)"/>
+
+  <rect x="390" y="580" width="420" height="68" class="box"/>
+  <text x="600" y="623" text-anchor="middle" class="text">风险判断与能力分析</text>
+  <path d="M600 648 L600 678" class="line" marker-end="url(#arrow)"/>
+
+  <rect x="380" y="678" width="440" height="68" class="box"/>
+  <text x="600" y="721" text-anchor="middle" class="text">生成个性化学习规划</text>
+  <path d="M600 746 L600 776" class="line" marker-end="url(#arrow)"/>
+
+  <rect x="410" y="776" width="380" height="68" class="box"/>
+  <text x="600" y="819" text-anchor="middle" class="text">形成阶段学习任务</text>
+  <path d="M600 844 L600 874" class="line" marker-end="url(#arrow)"/>
+
+  <rect x="390" y="874" width="420" height="68" class="box"/>
+  <text x="600" y="917" text-anchor="middle" class="text">联动智能刷题推荐</text>
+  <path d="M600 942 L600 972" class="line" marker-end="url(#arrow)"/>
+
+  <rect x="410" y="972" width="380" height="68" class="box"/>
+  <text x="600" y="1015" text-anchor="middle" class="text">联动 RAG 问答辅助</text>
+</svg>

@@ -1,36 +1,40 @@
 import request from '@/utils/request'
+import { aiApiPrefix } from '@/api/education/ai'
 
-// 训练预测模型
 export function trainPredictionModel(data) {
   return request({
-    url: '/rag-api/train-prediction-model',
+    url: `${aiApiPrefix}/prediction/train`,
     method: 'post',
-    data: data,
-    baseURL: '', // 不使用默认的baseURL，避免添加dev-api前缀
-    timeout: 60000,
+    data,
+    timeout: 180000,
     headers: {
       'Content-Type': 'multipart/form-data'
     }
   })
 }
 
-// 获取模型信息
 export function getModelInfo() {
   return request({
-    url: '/rag-api/model-info',
+    url: `${aiApiPrefix}/prediction/model-info`,
     method: 'get',
-    baseURL: '', // 不使用默认的baseURL，避免添加dev-api前缀
-    timeout: 60000
+    timeout: 120000
   })
 }
 
-// 预测成绩
 export function predictScore(data) {
   return request({
-    url: '/rag-api/predict-score',
+    url: `${aiApiPrefix}/prediction/predict`,
     method: 'post',
-    data: data,
-    baseURL: '', // 不使用默认的baseURL，避免添加dev-api前缀
-    timeout: 60000
+    data,
+    timeout: 120000
+  })
+}
+
+export function predictScoreWithAi(data) {
+  return request({
+    url: `${aiApiPrefix}/prediction/ai-enhanced`,
+    method: 'post',
+    data,
+    timeout: 180000
   })
 }

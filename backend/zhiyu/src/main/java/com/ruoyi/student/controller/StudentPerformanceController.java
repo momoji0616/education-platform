@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
-import com.ruoyi.common.annotation.Anonymous;
 import com.ruoyi.common.annotation.Log;
 import com.ruoyi.common.core.domain.AjaxResult;
 import com.ruoyi.common.core.page.TableDataInfo;
@@ -46,8 +45,7 @@ public class StudentPerformanceController extends CustomBaseController
     /**
      * 获取学生成绩表现列表
      */
-    // 使用@Anonymous注解允许匿名访问，完全绕过权限检查
-    @Anonymous
+    @PreAuthorize("@ss.hasRole('admin') or @ss.hasRole('manager')")
     @GetMapping("/list")
     public TableDataInfo list(StudentPerformance studentPerformance)
     {
@@ -72,7 +70,7 @@ public class StudentPerformanceController extends CustomBaseController
     /**
      * 根据ID获取学生成绩表现详细信息
      */
-    @Anonymous
+    @PreAuthorize("@ss.hasRole('admin') or @ss.hasRole('manager')")
     @GetMapping(value = "/{id}")
     public AjaxResult getInfo(@PathVariable("id") Long id)
     {
@@ -82,7 +80,7 @@ public class StudentPerformanceController extends CustomBaseController
     /**
      * 新增学生成绩表现
      */
-    @Anonymous
+    @PreAuthorize("@ss.hasRole('admin') or @ss.hasRole('manager')")
     @Log(title = "学生成绩管理", businessType = BusinessType.INSERT)
     @PostMapping
     public AjaxResult add(@Validated @RequestBody StudentPerformance studentPerformance)
@@ -93,7 +91,7 @@ public class StudentPerformanceController extends CustomBaseController
     /**
      * 修改学生成绩表现
      */
-    @PreAuthorize("@ss.hasPermi('student:performance:edit')")
+    @PreAuthorize("@ss.hasRole('admin') or @ss.hasRole('manager')")
     @Log(title = "学生成绩管理", businessType = BusinessType.UPDATE)
     @PutMapping
     public AjaxResult edit(@Validated @RequestBody StudentPerformance studentPerformance)
@@ -104,7 +102,7 @@ public class StudentPerformanceController extends CustomBaseController
     /**
      * 删除学生成绩表现
      */
-    @PreAuthorize("@ss.hasPermi('student:performance:remove')")
+    @PreAuthorize("@ss.hasRole('admin') or @ss.hasRole('manager')")
     @Log(title = "学生成绩管理", businessType = BusinessType.DELETE)
     @DeleteMapping("/{ids}")
     public AjaxResult remove(@PathVariable Long[] ids)
@@ -115,7 +113,7 @@ public class StudentPerformanceController extends CustomBaseController
     /**
      * 导入学生成绩表现数据
      */
-    @PreAuthorize("@ss.hasPermi('student:performance:import')")
+    @PreAuthorize("@ss.hasRole('admin') or @ss.hasRole('manager')")
     @Log(title = "学生成绩管理", businessType = BusinessType.IMPORT)
     @PostMapping("/importData")
     public AjaxResult importData(MultipartFile file, boolean updateSupport)
@@ -141,7 +139,7 @@ public class StudentPerformanceController extends CustomBaseController
     /**
      * 下载导入模板
      */
-    @PreAuthorize("@ss.hasPermi('student:performance:import')")
+    @PreAuthorize("@ss.hasRole('admin') or @ss.hasRole('manager')")
     @GetMapping("/importTemplate")
     public void importTemplate(HttpServletResponse response)
     {

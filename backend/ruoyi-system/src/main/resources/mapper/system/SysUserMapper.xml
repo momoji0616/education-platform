@@ -82,6 +82,22 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		<if test="deptId != null and deptId != 0">
 			AND (u.dept_id = #{deptId} OR u.dept_id IN ( SELECT t.dept_id FROM sys_dept t WHERE find_in_set(#{deptId}, ancestors) ))
 		</if>
+		<if test="roleId != null and roleId != 0">
+			AND EXISTS (
+				SELECT 1
+				FROM sys_user_role ur
+				WHERE ur.user_id = u.user_id
+				AND ur.role_id = #{roleId}
+			)
+		</if>
+		<if test="params.className != null and params.className != ''">
+			AND EXISTS (
+				SELECT 1
+				FROM edu_user_class_profile eucp
+				WHERE eucp.user_id = u.user_id
+				  AND eucp.class_name = #{params.className}
+			)
+		</if>
 		<!-- 数据范围过滤 -->
 		${params.dataScope}
 	</select>

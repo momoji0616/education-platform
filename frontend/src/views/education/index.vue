@@ -461,19 +461,19 @@ const cancelForm = () => {
 // 修改
 const handleUpdate = (row) => {
   // 保留修改功能，后续可实现
-  ElMessage.info('修改功能待实现')
+  ElMessage.info('编辑功能将在下一轮接入')
 }
 
 // 删除
 const handleDelete = async (id) => {
   // 保留删除功能，后续可实现
-  ElMessage.info('删除功能待实现')
+  ElMessage.info('删除功能将在下一轮接入')
 }
 
 // 批量删除
 const handleBatchDelete = async () => {
   // 保留批量删除功能，后续可实现
-  ElMessage.info('批量删除功能待实现')
+  ElMessage.info('批量删除功能将在下一轮接入')
 }
 
 // 初始化

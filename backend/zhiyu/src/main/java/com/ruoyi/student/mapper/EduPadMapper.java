@@ -49,6 +49,9 @@ public interface EduPadMapper {
     List<Map<String, Object>> selectForumPostsAll();
     int insertForumReply(EduForumReply reply);
     List<Map<String, Object>> selectForumRepliesByPostIds(@Param("postIds") List<Long> postIds);
+    List<Map<String, Object>> selectClassChatContacts(@Param("className") String className, @Param("excludeUserId") Long excludeUserId, @Param("roleKey") String roleKey);
+    List<Map<String, Object>> selectChatMessages(@Param("className") String className, @Param("currentUserId") Long currentUserId, @Param("peerUserId") Long peerUserId, @Param("currentUserIdStr") String currentUserIdStr, @Param("peerUserIdStr") String peerUserIdStr);
+    List<Map<String, Object>> selectGroupChatMessages(@Param("className") String className, @Param("groupId") String groupId);
 
     Date selectForumLastReadTime(Long userId);
     int insertForumReadState(@Param("userId") Long userId, @Param("readTime") Date readTime);
@@ -61,4 +64,6 @@ public interface EduPadMapper {
     Map<String, Object> selectUserClassProfileByUserId(Long userId);
     int upsertUserClassProfile(@Param("userId") Long userId, @Param("roleKey") String roleKey, @Param("gradeNo") Integer gradeNo, @Param("classNo") Integer classNo, @Param("className") String className, @Param("headTeacher") Integer headTeacher);
     Integer countStudentInClassByUserId(@Param("studentUserId") Long studentUserId, @Param("className") String className);
+    List<Map<String, Object>> selectAdminMajorOverview();
+    List<Map<String, Object>> selectAdminMajorUsers(@Param("className") String className, @Param("roleKey") String roleKey);
 }

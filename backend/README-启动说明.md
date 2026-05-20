@@ -1,153 +1,130 @@
-# RuoYi 后端启动说明
+# 后端启动说明
 
-## 前置要求
+本文档说明本项目 Spring Boot 后端的本地启动方式。当前后端作为业务与权限中心，负责：
 
-### 1. Java 环境
-- **JDK 1.8**（不是 JRE）
-- 已设置 `JAVA_HOME` 环境变量指向 JDK 安装目录
-- 例如：`C:\Program Files\Java\jdk1.8.0_202`
+- 用户、角色、权限
+- 作业、考试、成绩、任务
+- 聊天、论坛
+- AI 服务代理 `/education/ai/*`
 
-### 2. MySQL 数据库
-- MySQL 5.7+ 或 MySQL 8.0+
+## 1. 前置要求
+
+### Java
+
+- JDK 8
+- 必须是 JDK，不是 JRE
+- 正确设置 `JAVA_HOME`
+
+### 数据库
+
+- MySQL 5.7+ 或 8.0+
 - 已创建数据库 `ry-vue`
-- 已导入初始化 SQL 脚本（`sql/ry_20250522.sql`）
-- 数据库配置在 `application-druid.yml` 中：
-  ```yaml
-  url: jdbc:mysql://localhost:3306/ry-vue?...
-  username: root
-  password: 123456
-  ```
+- 已导入若依基础 SQL
 
-### 3. Redis 服务（必需）
-- Redis 3.0+ 
-- 默认端口：6379
-- 无密码（或根据配置修改）
+### Redis
 
-## Redis 安装方法
+- Redis 已启动
+- 默认端口 `6379`
 
-### Windows 安装 Redis
+### AI 服务
 
-#### 方法 1：使用 WSL（推荐）
-```bash
-# 在 WSL 中安装
-sudo apt update
-sudo apt install redis-server
-sudo service redis-server start
+后端当前通过环境变量或 profile 配置读取 AI 地址：
+
+```env
+EDUCATION_AI_BASE_URL=http://127.0.0.1:8000
 ```
 
-#### 方法 2：使用 Windows 版本
-1. 下载 Redis for Windows：
-   - 官方不提供 Windows 版本，可以使用：
-   - Memurai（商业版，有免费版本）
-   - 或使用 WSL 运行 Linux 版本的 Redis
+相关配置文件：
 
-2. 或使用 Docker：
-   ```bash
-   docker run -d -p 6379:6379 --name redis redis:latest
-   ```
+- [application.yml](/E:/education-platform/backend/ruoyi-admin/src/main/resources/application.yml)
+- [application-dev.yml](/E:/education-platform/backend/ruoyi-admin/src/main/resources/application-dev.yml)
+- [application-prod.yml](/E:/education-platform/backend/ruoyi-admin/src/main/resources/application-prod.yml)
+- [application-dev.yml](/E:/education-platform/backend/zhiyu/src/main/resources/application-dev.yml)
+- [application-prod.yml](/E:/education-platform/backend/zhiyu/src/main/resources/application-prod.yml)
 
-#### 方法 3：使用 Chocolatey
+## 2. 启动顺序
+
+建议顺序：
+
+1. MySQL
+2. Redis
+3. FastAPI AI 服务
+4. Spring Boot 后端
+
+## 3. 启动命令
+
+### 编译聚合工程
+
 ```powershell
-choco install redis-64
-```
-
-### 启动 Redis
-
-**Windows 服务方式：**
-```powershell
-# 如果 Redis 安装为服务
-net start redis
-```
-
-**命令行方式：**
-```bash
-redis-server
-```
-
-**Docker 方式：**
-```bash
-docker start redis
-```
-
-### 验证 Redis 是否运行
-```powershell
-# 检查端口
-netstat -ano | findstr :6379
-
-# 或使用 Redis 客户端测试
-redis-cli ping
-# 应该返回 PONG
-```
-
-## 启动步骤
-
-### 1. 安装项目依赖
-```powershell
-cd E:\tensorflow_education\tensorflow_education\backend
+cd E:\education-platform\backend
 mvn clean install -DskipTests
 ```
 
-### 2. 确保服务已启动
-- ✅ MySQL 服务运行中（端口 3306）
-- ✅ Redis 服务运行中（端口 6379）
+### 启动管理端入口
 
-### 3. 启动应用
-
-**方式 1：使用启动脚本（推荐）**
 ```powershell
-.\start.bat
-# 或
-.\start.ps1
-```
-
-**方式 2：手动启动**
-```powershell
-cd ruoyi-admin
-$env:JAVA_HOME = "C:\Program Files\Java\jdk1.8.0_202"
+cd E:\education-platform\backend\ruoyi-admin
 mvn spring-boot:run
 ```
 
-**方式 3：直接运行 JAR**
+如果你使用 JAR 运行：
+
 ```powershell
-cd ruoyi-admin
-$env:JAVA_HOME = "C:\Program Files\Java\jdk1.8.0_202"
+cd E:\education-platform\backend\ruoyi-admin
 java -jar target/ruoyi-admin.jar
 ```
 
-## 常见问题
+## 4. 当前后端模块说明
 
-### 问题 1：无法连接到 Redis
-**错误信息：** `Unable to connect to Redis; Unable to connect to localhost:6379`
+### 启动入口
 
-**解决方法：**
-1. 检查 Redis 是否已安装
-2. 启动 Redis 服务
-3. 验证端口 6379 是否被占用
+- [ruoyi-admin](/E:/education-platform/backend/ruoyi-admin)
 
-### 问题 2：无法连接到 MySQL
-**错误信息：** `Communications link failure`
+### 教育业务模块
 
-**解决方法：**
-1. 检查 MySQL 服务是否运行
-2. 验证数据库 `ry-vue` 是否已创建
-3. 检查 `application-druid.yml` 中的数据库配置
+- [zhiyu](/E:/education-platform/backend/zhiyu)
 
-### 问题 3：JAVA_HOME 未设置
-**错误信息：** `No compiler is provided in this environment`
+主要控制器包括：
 
-**解决方法：**
-1. 安装 JDK（不是 JRE）
-2. 设置 `JAVA_HOME` 环境变量
-3. 将 `%JAVA_HOME%\bin` 添加到 PATH
+- [EduPadController.java](/E:/education-platform/backend/zhiyu/src/main/java/com/ruoyi/student/controller/EduPadController.java)
+- [EduPadTeacherController.java](/E:/education-platform/backend/zhiyu/src/main/java/com/ruoyi/student/controller/EduPadTeacherController.java)
+- [EduPadStudentController.java](/E:/education-platform/backend/zhiyu/src/main/java/com/ruoyi/student/controller/EduPadStudentController.java)
+- [EduPadChatController.java](/E:/education-platform/backend/zhiyu/src/main/java/com/ruoyi/student/controller/EduPadChatController.java)
+- [EduPadForumController.java](/E:/education-platform/backend/zhiyu/src/main/java/com/ruoyi/student/controller/EduPadForumController.java)
+- [EduAiController.java](/E:/education-platform/backend/zhiyu/src/main/java/com/ruoyi/student/controller/EduAiController.java)
 
-## 访问地址
+## 5. 常见问题
 
-启动成功后，访问：
-- 后端 API：http://localhost:8080
-- Swagger 文档：http://localhost:8080/swagger-ui/index.html
-- Druid 监控：http://localhost:8080/druid/index.html
+### `No compiler is provided in this environment`
 
-## 默认账号
+原因：
 
-- 用户名：`admin`
-- 密码：`admin123`（首次登录后需要修改）
+- 当前环境只有 JRE，没有 JDK
+
+处理：
+
+- 安装 JDK 8
+- 检查 `JAVA_HOME`
+- 确认 `javac -version` 可用
+
+### 无法连接 Redis
+
+处理：
+
+- 确认 Redis 已启动
+- 检查 `localhost:6379`
+- 核对后端 Redis 配置
+
+### 无法调用 AI 接口
+
+处理：
+
+1. 先确认 FastAPI 已启动
+2. 确认 `EDUCATION_AI_BASE_URL` 是否正确
+3. 检查 `/education/ai/*` 代理接口是否已登录访问
+
+## 6. 验证地址
+
+- 后端 API：`http://localhost:8080`
+- Swagger：`http://localhost:8080/swagger-ui/index.html`
+- Druid：`http://localhost:8080/druid/index.html`
