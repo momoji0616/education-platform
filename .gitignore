@@ -38,6 +38,7 @@ ai_service/chroma_db/
 
 # Large local database dump
 backend/sql/piclass2.sql
+deploy/export/
 
 # Editor and temporary files
 *.swp
