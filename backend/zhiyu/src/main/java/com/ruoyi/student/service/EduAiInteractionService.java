@@ -220,7 +220,7 @@ public class EduAiInteractionService
     private String selectLegacyClassCode(String studentNo)
     {
         List<String> rows = jdbcTemplate.query(
-                "SELECT class_code FROM legacy_staging_student_profile"
+                "SELECT class_code FROM education_legacy_piclass.legacy_staging_student_profile"
                         + " WHERE student_no = ? LIMIT 1",
                 (rs, rowNum) -> rs.getString(1),
                 studentNo);
