@@ -29,7 +29,7 @@ SELECT
     ROUND(IFNULL(AVG(CASE WHEN ar.is_correct = '1' THEN 100 ELSE 0 END), 0), 2) AS correctRate,
     MAX(ar.submit_time) AS latestSubmitTime
 FROM edu_student_answer_record ar
-JOIN education_legacy_piclass.legacy_staging_student_profile sp
+JOIN legacy_staging_student_profile sp
     ON ar.student_no = sp.student_no
 LEFT JOIN edu_question_bank qb
     ON ar.question_id = qb.id
@@ -71,7 +71,7 @@ SELECT
     qb.standard_answer AS standardAnswer,
     qb.analysis AS analysis
 FROM edu_student_answer_record ar
-JOIN education_legacy_piclass.legacy_staging_student_profile sp
+JOIN legacy_staging_student_profile sp
     ON ar.student_no = sp.student_no
 LEFT JOIN edu_question_bank qb
     ON ar.question_id = qb.id
@@ -90,7 +90,7 @@ SELECT
     SUM(CASE WHEN ar.is_correct = '0' THEN 1 ELSE 0 END) AS wrongCount,
     ROUND(IFNULL(AVG(CASE WHEN ar.is_correct = '1' THEN 100 ELSE 0 END), 0), 2) AS correctRate
 FROM edu_student_answer_record ar
-JOIN education_legacy_piclass.legacy_staging_student_profile sp
+JOIN legacy_staging_student_profile sp
     ON ar.student_no = sp.student_no
 LEFT JOIN edu_question_bank qb
     ON ar.question_id = qb.id
