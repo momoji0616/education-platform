@@ -46,7 +46,11 @@ def _load_deepseek_setting(name: str, default: str) -> str:
 
 
 def load_deepseek_base_url() -> str:
-    return _load_deepseek_setting("DEEPSEEK_BASE_URL", "https://api.deepseek.com").rstrip("/")
+    base_url = _load_deepseek_setting("DEEPSEEK_BASE_URL", "https://api.deepseek.com").rstrip("/")
+    suffix = "/chat/completions"
+    if base_url.endswith(suffix):
+        return base_url[: -len(suffix)].rstrip("/")
+    return base_url
 
 
 def load_deepseek_model() -> str:

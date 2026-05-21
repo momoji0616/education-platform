@@ -39,6 +39,12 @@ ai_service/chroma_db/
 # Large local database dump
 backend/sql/piclass2.sql
 deploy/export/
+deploy/runtime_database/
+
+# Local deployment secrets and private keys
+*.pem
+*.key
+qdrant_db_runtime_assets.zip
 
 # Editor and temporary files
 *.swp
