@@ -79,7 +79,7 @@
                qb.chapter_name as chapterName,
                count(1) as answerCount
         from edu_student_answer_record ar
-                 join education_legacy_piclass.legacy_staging_student_profile sp on ar.student_no = sp.student_no
+                 join legacy_staging_student_profile sp on ar.student_no = sp.student_no
                  left join edu_question_bank qb on ar.question_id = qb.id
         where sp.class_code in
         <foreach collection="legacyClassCodes" item="code" open="(" separator="," close=")">
@@ -342,7 +342,7 @@
                round(ifnull(avg(case when ar.is_correct = '1' then 100 else 0 end), 0), 2) as correctRate,
                count(distinct case when qb.knowledge_point is not null and qb.knowledge_point != '' then qb.knowledge_point end) as knowledgePointCount
         from edu_student_answer_record ar
-                 join education_legacy_piclass.legacy_staging_student_profile sp on ar.student_no = sp.student_no
+                 join legacy_staging_student_profile sp on ar.student_no = sp.student_no
                  left join edu_question_bank qb on ar.question_id = qb.id
         where sp.class_code in
         <foreach collection="legacyClassCodes" item="code" open="(" separator="," close=")">
@@ -365,7 +365,7 @@
                sum(case when ar.is_correct = '1' then 1 else 0 end) as correctCount,
                round(ifnull(avg(case when ar.is_correct = '1' then 100 else 0 end), 0), 2) as correctRate
         from edu_student_answer_record ar
-                 join education_legacy_piclass.legacy_staging_student_profile sp on ar.student_no = sp.student_no
+                 join legacy_staging_student_profile sp on ar.student_no = sp.student_no
                  left join edu_question_bank qb on ar.question_id = qb.id
         where sp.class_code in
         <foreach collection="legacyClassCodes" item="code" open="(" separator="," close=")">
@@ -394,7 +394,7 @@
                count(1) as wrongCount,
                count(distinct sp.student_no) as wrongStudentCount
         from edu_student_answer_record ar
-                 join education_legacy_piclass.legacy_staging_student_profile sp on ar.student_no = sp.student_no
+                 join legacy_staging_student_profile sp on ar.student_no = sp.student_no
                  left join edu_question_bank qb on ar.question_id = qb.id
         where sp.class_code = #{legacyClassCode}
           and ar.is_correct = '0'
@@ -410,7 +410,7 @@
                count(distinct sp.student_no) as studentCount,
                round(ifnull(avg(case when ar.is_correct = '1' then 100 else 0 end), 0), 2) as correctRate
         from edu_student_answer_record ar
-                 join education_legacy_piclass.legacy_staging_student_profile sp on ar.student_no = sp.student_no
+                 join legacy_staging_student_profile sp on ar.student_no = sp.student_no
                  left join edu_question_bank qb on ar.question_id = qb.id
         where sp.class_code = #{legacyClassCode}
           and qb.knowledge_point is not null
@@ -458,7 +458,7 @@
                round(ifnull(avg(case when ar.is_correct = '1' then 100 else 0 end), 0), 2) as correctRate,
                max(ar.submit_time) as latestSubmitTime
         from edu_student_answer_record ar
-                 join education_legacy_piclass.legacy_staging_student_profile sp on ar.student_no = sp.student_no
+                 join legacy_staging_student_profile sp on ar.student_no = sp.student_no
                  left join edu_question_bank qb on ar.question_id = qb.id
         where sp.class_code in
         <foreach collection="legacyClassCodes" item="code" open="(" separator="," close=")">
@@ -489,7 +489,7 @@
                round(ifnull(avg(case when ar.is_correct = '1' then 100 else 0 end), 0), 2) as correctRate,
                max(ar.submit_time) as latestSubmitTime
         from edu_student_answer_record ar
-                 join education_legacy_piclass.legacy_staging_student_profile sp on ar.student_no = sp.student_no
+                 join legacy_staging_student_profile sp on ar.student_no = sp.student_no
                  left join edu_question_bank qb on ar.question_id = qb.id
         where sp.class_code in
         <foreach collection="legacyClassCodes" item="code" open="(" separator="," close=")">
@@ -533,7 +533,7 @@
                qb.analysis,
                qb.knowledge_point as knowledgePoint
         from edu_student_answer_record ar
-                 join education_legacy_piclass.legacy_staging_student_profile sp on ar.student_no = sp.student_no
+                 join legacy_staging_student_profile sp on ar.student_no = sp.student_no
                  left join edu_question_bank qb on ar.question_id = qb.id
         where sp.class_code in
         <foreach collection="legacyClassCodes" item="code" open="(" separator="," close=")">
@@ -554,7 +554,7 @@
         select sp.student_no as studentNo,
                sp.student_name as studentName,
                sp.class_code as classCode
-        from education_legacy_piclass.legacy_staging_student_profile sp
+        from legacy_staging_student_profile sp
         where sp.class_code in
         <foreach collection="legacyClassCodes" item="code" open="(" separator="," close=")">
             #{code}

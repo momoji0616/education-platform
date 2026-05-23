@@ -79,8 +79,10 @@ DB_ROOT_PASSWORD='mysql-root-password-if-needed' \
 
 Expected files in `RUNTIME_DB_DIR`:
 
-- `ry_vue_required_runtime_data.sql`
-- `education_legacy_piclass_required_staging_data.sql`
+- `education_platform_ry_vue_single_database.sql`
+
+The current handoff uses a single MySQL database: `ry-vue`. The old
+`education_legacy_piclass` staging tables have been migrated into `ry-vue`.
 
 ## AI runtime assets
 

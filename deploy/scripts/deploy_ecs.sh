@@ -316,12 +316,13 @@ if [[ -n "${DB_ROOT_PASSWORD:-}" ]]; then
   MYSQL+=( -p"${DB_ROOT_PASSWORD}" )
 fi
 "${MYSQL[@]}" -e "CREATE DATABASE IF NOT EXISTS \`ry-vue\` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;"
-"${MYSQL[@]}" -e "CREATE DATABASE IF NOT EXISTS education_legacy_piclass DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci;"
-if [[ -f /tmp/education-platform-runtime-db/ry_vue_required_runtime_data.sql ]]; then
+if [[ -f /tmp/education-platform-runtime-db/education_platform_ry_vue_single_database.sql ]]; then
+  "${MYSQL[@]}" ry-vue < /tmp/education-platform-runtime-db/education_platform_ry_vue_single_database.sql
+elif [[ -f /tmp/education-platform-runtime-db/ry_vue_required_runtime_data.sql ]]; then
   "${MYSQL[@]}" ry-vue < /tmp/education-platform-runtime-db/ry_vue_required_runtime_data.sql
-fi
-if [[ -f /tmp/education-platform-runtime-db/education_legacy_piclass_required_staging_data.sql ]]; then
-  "${MYSQL[@]}" education_legacy_piclass < /tmp/education-platform-runtime-db/education_legacy_piclass_required_staging_data.sql
+else
+  echo "No ry-vue runtime SQL dump found in /tmp/education-platform-runtime-db" >&2
+  exit 1
 fi
 EOF
 fi

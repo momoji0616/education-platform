@@ -439,7 +439,7 @@
                    when p.class_name = _utf8mb4 0xe695b0e68daee7a791e5ada6e4b88ee5a4a7e695b0e68daee68a80e69caf then (
                        select count(distinct sp2.student_no)
                        from edu_student_answer_record ar2
-                                inner join education_legacy_piclass.legacy_staging_student_profile sp2
+                                inner join legacy_staging_student_profile sp2
                                            on ar2.student_no = sp2.student_no
                        where sp2.class_code in ('1002', '1005', '1008', '1009', '1010', '1011', '1012', '1013', '1014', '1015', '1016')
                    )
