@@ -12,6 +12,8 @@ __pycache__/
 *.py[cod]
 *.pyo
 .pytest_cache/
+.codex/
+**/.codex/
 
 # Local virtual environments and package caches
 .venv/
@@ -40,6 +42,7 @@ ai_service/chroma_db/
 backend/sql/piclass2.sql
 deploy/export/
 deploy/runtime_database/
+deploy/ocr_service/
 
 # Local deployment secrets and private keys
 *.pem
@@ -51,4 +54,7 @@ qdrant_db_runtime_assets.zip
 *.swo
 ~$*
 tmp_*
+tmp/
+output/
+tools/
 contest-deck.pptx
